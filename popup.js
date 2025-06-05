@@ -20,8 +20,9 @@ const gameResult = document.getElementById("gameResult");
 const importBtn = document.getElementById("importBtn");
 const exportBtn = document.getElementById("exportBtn");
 const importFile = document.getElementById("importFile");
-const switchModeBtn = document.getElementById("switchMode");
+const switchModeInput = document.getElementById("switchMode");
 const currentModeText = document.getElementById("currentMode");
+const searchInput = document.getElementById("searchInput");
 
 // Pagination variables
 let currentPage = 1;
@@ -29,8 +30,9 @@ const itemsPerPage = 10;
 
 // Game variables
 let currentGameWord = null;
-let isShowingWord = true; // true = show word, false = show meaning
+let isShowingWord = false; // true = show word, false = show meaning
 let currentOptions = [];
+let searchKeyword = "";
 
 addTab.onclick = () => {
   addSection.style.display = 'block';
@@ -80,10 +82,17 @@ function openGoogleTranslate(text) {
   chrome.tabs.create({ url });
 }
 
+searchInput.addEventListener("input", (e) => {
+  searchKeyword = e.target.value.trim();
+  currentPage = 1;
+  loadWords(searchKeyword);
+});
+
 function loadWords(filter = "") {
   chrome.storage.local.get({ dictionary: [] }, (result) => {
     const filteredWords = result.dictionary.filter(entry => 
-      entry.word.toLowerCase().includes(filter.toLowerCase())
+      entry.word.toLowerCase().includes(filter.toLowerCase()) ||
+      entry.meaning.toLowerCase().includes(filter.toLowerCase())
     );
     
     // Random thứ tự hiển thị
@@ -179,6 +188,7 @@ function getRandomOptions(correctAnswer, allWords) {
 
 function updateModeText() {
   currentModeText.textContent = isShowingWord ? "Word-Meaning" : "Meaning-Word";
+  switchModeInput.checked = !isShowingWord;
 }
 
 function loadNewGameWord() {
@@ -270,8 +280,8 @@ skipWordBtn.onclick = () => {
 };
 
 // Thêm xử lý cho nút chuyển chế độ
-switchModeBtn.onclick = () => {
-  isShowingWord = !isShowingWord;
+switchModeInput.onchange = () => {
+  isShowingWord = !switchModeInput.checked;
   updateModeText();
   loadNewGameWord();
 };
@@ -361,5 +371,11 @@ chrome.storage.local.get(['selectedWord'], (result) => {
 window.addEventListener('DOMContentLoaded', () => {
   if (listSection.style.display !== 'none' || listTab.classList.contains('active')) {
     loadWords();
+  }
+});
+
+gameAnswer.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    checkAnswer();
   }
 });

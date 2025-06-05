@@ -12,16 +12,17 @@
   </div>
 
   <div id="listSection">
-    <div class="list-controls">
-      <input type="file" id="importFile" accept=".json" style="display: none;" />
-      <button id="importBtn" class="control-btn">Import</button>
-      <button id="exportBtn" class="control-btn">Export</button>
-    </div>
+    <input id="searchInput" type="text" class="search-input" placeholder="Search word or meaning..." />
     <div id="wordList"></div>
     <div class="pagination">
       <button id="prevPage" class="page-btn">Previous</button>
       <span id="pageInfo">Page 1</span>
       <button id="nextPage" class="page-btn">Next</button>
+    </div>
+    <div class="list-controls">
+      <input type="file" id="importFile" accept=".json" style="display: none;" />
+      <button id="importBtn" class="control-btn">Import</button>
+      <button id="exportBtn" class="control-btn">Export</button>
     </div>
   </div>
 
@@ -34,7 +35,10 @@
   <div id="gameSection" style="display: none;">
     <div class="game-container">
       <div class="game-mode-switch">
-        <button id="switchMode" class="mode-btn">Switch Mode</button>
+        <label class="switch">
+          <input type="checkbox" id="switchMode">
+          <span class="slider"></span>
+        </label>
         <span id="currentMode" class="mode-text">Word-Meaning</span>
       </div>
       <div id="gameQuestion" class="game-question"></div>
