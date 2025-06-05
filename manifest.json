@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Lingofy Dictionary",
+  "version": "1.0",
+  "description": "Save and manage your English vocabulary locally",
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
