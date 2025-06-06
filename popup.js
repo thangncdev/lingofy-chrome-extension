@@ -24,6 +24,8 @@ const switchModeInput = document.getElementById("switchMode");
 const currentModeText = document.getElementById("currentMode");
 const searchInput = document.getElementById("searchInput");
 const clearAllBtn = document.getElementById("clearAllBtn");
+const achievementsTab = document.getElementById("achievementsTab");
+const achievementsSection = document.getElementById("achievementsSection");
 
 // Pagination variables
 let currentPage = 1;
@@ -35,32 +37,85 @@ let isShowingWord = false; // true = show word, false = show meaning
 let currentOptions = [];
 let searchKeyword = "";
 
+// Achievement system
+const LEVEL_THRESHOLDS = [
+  0,      // Level 1
+  10,     // Level 2
+  50,     // Level 3
+  100,    // Level 4
+  200     // Level 5
+];
+
+const BADGES = [
+  {
+    id: 'level-1',
+    name: 'Beginner',
+    description: 'Start your learning journey',
+    icon: 'images/beginner.png',
+    level: 1
+  },
+  {
+    id: 'level-2',
+    name: 'Intermediate',
+    description: 'Keep up the good work!',
+    icon: 'images/intermediate.png',
+    level: 2
+  },
+  {
+    id: 'level-3',
+    name: 'Advanced',
+    description: 'You\'re getting really good!',
+    icon: 'images/advanced.png',
+    level: 3
+  },
+  {
+    id: 'level-4',
+    name: 'Expert',
+    description: 'Almost there!',
+    icon: 'images/expert.png',
+    level: 4
+  },
+  {
+    id: 'level-5',
+    name: 'Master',
+    description: 'You\'ve reached the top!',
+    icon: 'images/master.png',
+    level: 5
+  }
+];
+
 addTab.onclick = () => {
-  addSection.style.display = 'block';
   listSection.style.display = 'none';
+  addSection.style.display = 'block';
   gameSection.style.display = 'none';
-  addTab.classList.add('active');
+  achievementsSection.style.display = 'none';
   listTab.classList.remove('active');
+  addTab.classList.add('active');
   gameTab.classList.remove('active');
+  achievementsTab.classList.remove('active');
 };
 
 listTab.onclick = () => {
-  addSection.style.display = 'none';
   listSection.style.display = 'block';
+  addSection.style.display = 'none';
   gameSection.style.display = 'none';
-  addTab.classList.remove('active');
+  achievementsSection.style.display = 'none';
   listTab.classList.add('active');
+  addTab.classList.remove('active');
   gameTab.classList.remove('active');
+  achievementsTab.classList.remove('active');
   loadWords();
 };
 
 gameTab.onclick = () => {
-  addSection.style.display = 'none';
   listSection.style.display = 'none';
+  addSection.style.display = 'none';
   gameSection.style.display = 'block';
-  addTab.classList.remove('active');
+  achievementsSection.style.display = 'none';
   listTab.classList.remove('active');
+  addTab.classList.remove('active');
   gameTab.classList.add('active');
+  achievementsTab.classList.remove('active');
   loadNewGameWord();
 };
 
@@ -305,6 +360,17 @@ function checkAnswer() {
   if (userAnswer === correctAnswer) {
     gameResult.textContent = "Correct!";
     gameResult.style.color = "#22c55e";
+    
+    // Increment correct answers count
+    chrome.storage.local.get({ correctAnswers: 0 }, (result) => {
+      const newCount = (result.correctAnswers || 0) + 1;
+      chrome.storage.local.set({ correctAnswers: newCount }, () => {
+        // Update achievements if achievements tab is visible
+        if (achievementsSection.style.display !== 'none') {
+          updateAchievements();
+        }
+      });
+    });
   } else {
     // Lấy số lần sai để hiển thị
     chrome.storage.local.get({ wordErrors: {} }, (result) => {
@@ -425,17 +491,29 @@ chrome.storage.local.get(['selectedWord'], (result) => {
   }
 });
 
-// Khi popup load, nếu tab List đang active thì load luôn danh sách
+// On DOMContentLoaded, only show List section by default
 window.addEventListener('DOMContentLoaded', () => {
-  if (listSection.style.display !== 'none' || listTab.classList.contains('active')) {
-    loadWords();
-  }
+  addErrorListButton();
+  listSection.style.display = 'block';
+  addSection.style.display = 'none';
+  gameSection.style.display = 'none';
+  achievementsSection.style.display = 'none';
+  listTab.classList.add('active');
+  addTab.classList.remove('active');
+  gameTab.classList.remove('active');
+  achievementsTab.classList.remove('active');
+  loadWords();
   
   // Update version in footer
   const versionSpan = document.querySelector('.author-info span:nth-child(2)');
   if (versionSpan) {
     const manifest = chrome.runtime.getManifest();
     versionSpan.textContent = `Version: ${manifest.version}`;
+  }
+  
+  // Initialize achievements if achievements tab is visible
+  if (achievementsSection.style.display !== 'none') {
+    updateAchievements();
   }
 });
 
@@ -595,3 +673,68 @@ clearAllBtn.onclick = () => {
     });
   }
 };
+
+// Add achievements tab click handler
+achievementsTab.onclick = () => {
+  listSection.style.display = 'none';
+  addSection.style.display = 'none';
+  gameSection.style.display = 'none';
+  achievementsSection.style.display = 'block';
+  listTab.classList.remove('active');
+  addTab.classList.remove('active');
+  gameTab.classList.remove('active');
+  achievementsTab.classList.add('active');
+  updateAchievements();
+};
+
+function updateAchievements() {
+  chrome.storage.local.get({ correctAnswers: 0 }, (result) => {
+    const correctAnswers = result.correctAnswers || 0;
+    
+    // Update stats
+    document.getElementById('totalCorrectAnswers').textContent = correctAnswers;
+    
+    // Calculate current level
+    let currentLevel = 1;
+    for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+      if (correctAnswers >= LEVEL_THRESHOLDS[i]) {
+        currentLevel = i + 1;
+        break;
+      }
+    }
+    document.getElementById('currentLevel').textContent = currentLevel;
+    
+    // Show current badge at top of stats-summary
+    const currentBadge = BADGES.find(b => b.level === currentLevel);
+    const badgeDisplay = document.getElementById('currentBadgeDisplay');
+    if (currentBadge && badgeDisplay) {
+      badgeDisplay.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <img src="${currentBadge.icon}" alt="${currentBadge.name}" style="width: 56px; height: 56px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); background: #f1f5f9; margin-bottom: 2px;">
+          <div style="font-weight: 600; color: #1e293b; font-size: 15px;">${currentBadge.name}</div>
+        </div>
+      `;
+    }
+    
+    // Calculate progress to next level
+    const nextLevelThreshold = LEVEL_THRESHOLDS[currentLevel] || LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
+    const currentLevelThreshold = LEVEL_THRESHOLDS[currentLevel - 1];
+    const progress = ((correctAnswers - currentLevelThreshold) / (nextLevelThreshold - currentLevelThreshold)) * 100;
+    document.getElementById('levelProgress').style.width = `${Math.min(progress, 100)}%`;
+    
+    // Update badges
+    const badgesList = document.getElementById('badgesList');
+    badgesList.innerHTML = '';
+    
+    BADGES.forEach(badge => {
+      const badgeElement = document.createElement('div');
+      badgeElement.className = `badge-item ${badge.level > currentLevel ? 'locked' : ''}`;
+      badgeElement.innerHTML = `
+        <div class=\"badge-icon badge-level-${badge.level}\"><img src=\"${badge.icon}\" alt=\"${badge.name}\" style=\"width: 40px; height: 40px; object-fit: contain; opacity: ${badge.level > currentLevel ? 0.5 : 1};\"></div>
+        <div class=\"badge-name\">${badge.name}</div>
+        <div class=\"badge-description\">${badge.description}</div>
+      `;
+      badgesList.appendChild(badgeElement);
+    });
+  });
+}
