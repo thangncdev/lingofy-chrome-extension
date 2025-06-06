@@ -23,10 +23,11 @@ const importFile = document.getElementById("importFile");
 const switchModeInput = document.getElementById("switchMode");
 const currentModeText = document.getElementById("currentMode");
 const searchInput = document.getElementById("searchInput");
+const clearAllBtn = document.getElementById("clearAllBtn");
 
 // Pagination variables
 let currentPage = 1;
-const itemsPerPage = 10;
+const itemsPerPage = 6;
 
 // Game variables
 let currentGameWord = null;
@@ -176,14 +177,20 @@ function getRandomOptions(correctAnswer, allWords) {
     word.word !== correctAnswer && word.meaning !== correctAnswer
   );
   
-  // Random 2 từ khác
+  // Random 3 từ khác (thay vì 2)
   const shuffled = [...otherWords].sort(() => Math.random() - 0.5);
-  const wrongOptions = shuffled.slice(0, 2).map(word => 
-    isShowingWord ? word.meaning : word.word
-  );
+  const wrongOptions = shuffled.slice(0, 3).map(word => ({
+    text: isShowingWord ? word.meaning : word.word,
+    meaning: isShowingWord ? word.word : word.meaning
+  }));
   
   // Thêm đáp án đúng và random thứ tự
-  return [...wrongOptions, correctAnswer].sort(() => Math.random() - 0.5);
+  const correctOption = {
+    text: correctAnswer,
+    meaning: isShowingWord ? currentGameWord.word : currentGameWord.meaning
+  };
+  
+  return [...wrongOptions, correctOption].sort(() => Math.random() - 0.5);
 }
 
 function updateModeText() {
@@ -219,15 +226,43 @@ function loadNewGameWord() {
     currentOptions.forEach(option => {
       const optionBtn = document.createElement('button');
       optionBtn.className = 'option-btn';
-      optionBtn.textContent = option;
+      optionBtn.textContent = option.text;
       optionBtn.style.color = "#000";
       optionBtn.onclick = () => {
-        gameAnswer.value = option;
+        gameAnswer.value = option.text;
         checkAnswer();
       };
       optionsContainer.appendChild(optionBtn);
     });
   });
+}
+
+function getWordMeaning(word, allWords) {
+  console.log('Looking up meaning for:', word);
+  console.log('All words:', allWords);
+  
+  // Tìm từ trong dictionary
+  const entry = allWords.find(item => {
+    if (isShowingWord) {
+      // Nếu đang ở chế độ Word-Meaning, tìm theo word
+      return item.word.toLowerCase() === word.toLowerCase();
+    } else {
+      // Nếu đang ở chế độ Meaning-Word, tìm theo meaning
+      return item.meaning.toLowerCase() === word.toLowerCase();
+    }
+  });
+  
+  console.log('Found entry:', entry);
+  
+  if (!entry) {
+    console.log('No entry found for:', word);
+    return '';
+  }
+  
+  // Trả về nghĩa tương ứng
+  const result = isShowingWord ? entry.meaning : entry.word;
+  console.log('Returning:', result);
+  return result;
 }
 
 function checkAnswer() {
@@ -240,16 +275,30 @@ function checkAnswer() {
 
   // Disable tất cả các nút option
   const optionButtons = document.querySelectorAll('.option-btn');
-  optionButtons.forEach(btn => {
+  optionButtons.forEach((btn, index) => {
     btn.disabled = true;
     const optionText = btn.textContent.toLowerCase();
+    const meaning = currentOptions[index].meaning;
     
     if (optionText === correctAnswer) {
       // Đáp án đúng
       btn.classList.add('correct-option');
+      btn.innerHTML = `${btn.textContent} <span class="option-meaning">(${meaning})</span>`;
     } else if (optionText === userAnswer) {
       // Đáp án người dùng chọn (nếu sai)
       btn.classList.add('wrong-option');
+      btn.innerHTML = `${btn.textContent} <span class="option-meaning">(${meaning})</span>`;
+      
+      // Tăng số lần sai cho từ này
+      chrome.storage.local.get({ wordErrors: {} }, (result) => {
+        const wordErrors = result.wordErrors || {};
+        const wordKey = isShowingWord ? currentGameWord.word : currentGameWord.meaning;
+        wordErrors[wordKey] = (wordErrors[wordKey] || 0) + 1;
+        chrome.storage.local.set({ wordErrors });
+      });
+    } else {
+      // Các option khác
+      btn.innerHTML = `${btn.textContent} <span class="option-meaning">(${meaning})</span>`;
     }
   });
 
@@ -257,8 +306,14 @@ function checkAnswer() {
     gameResult.textContent = "Correct!";
     gameResult.style.color = "#22c55e";
   } else {
-    gameResult.textContent = "Wrong!";
-    gameResult.style.color = "#ef4444";
+    // Lấy số lần sai để hiển thị
+    chrome.storage.local.get({ wordErrors: {} }, (result) => {
+      const wordErrors = result.wordErrors || {};
+      const wordKey = isShowingWord ? currentGameWord.word : currentGameWord.meaning;
+      const errorCount = wordErrors[wordKey] || 0;
+      gameResult.textContent = `Wrong! (Error count: ${errorCount})`;
+      gameResult.style.color = "#ef4444";
+    });
   }
 
   // Load new word after a short delay
@@ -320,10 +375,13 @@ importFile.onchange = (event) => {
         throw new Error("Invalid data format");
       }
 
-      // Import data
-      chrome.storage.local.set({ dictionary: data }, () => {
-        alert("Import successful!");
-        loadWords();
+      // Simply append new words to dictionary
+      chrome.storage.local.get({ dictionary: [] }, (result) => {
+        const updatedDict = [...result.dictionary, ...data];
+        chrome.storage.local.set({ dictionary: updatedDict }, () => {
+          alert(`Import successful! ${data.length} words added.`);
+          loadWords();
+        });
       });
     } catch (error) {
       alert("Error importing file: " + error.message);
@@ -379,3 +437,162 @@ gameAnswer.addEventListener('keydown', (e) => {
     checkAnswer();
   }
 });
+
+wordInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    saveBtn.click();
+  }
+});
+
+meaningInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    saveBtn.click();
+  }
+});
+
+// Thêm nút để xem danh sách từ sai nhiều
+function addErrorListButton() {
+  const listControls = document.querySelector('.list-controls');
+  const errorListBtn = document.createElement('button');
+  errorListBtn.id = 'errorListBtn';
+  errorListBtn.className = 'control-btn';
+  errorListBtn.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    Error List
+  `;
+  errorListBtn.onclick = showErrorList;
+  listControls.appendChild(errorListBtn);
+}
+
+function showErrorList() {
+  chrome.storage.local.get({ wordErrors: {}, dictionary: [] }, (result) => {
+    const wordErrors = result.wordErrors || {};
+    const dictionary = result.dictionary || [];
+    
+    // Tạo danh sách từ và số lần sai
+    const errorList = Object.entries(wordErrors)
+      .map(([word, count]) => {
+        const entry = dictionary.find(item => 
+          item.word === word || item.meaning === word
+        );
+        return {
+          word: entry ? entry.word : word,
+          meaning: entry ? entry.meaning : 'Unknown',
+          errorCount: count
+        };
+      })
+      .sort((a, b) => b.errorCount - a.errorCount);
+
+    // Hiển thị danh sách
+    const errorListHtml = errorList.map(item => 
+      `<div class="error-item">
+        <span class="error-word">${item.word}</span>
+        <span class="error-meaning">${item.meaning}</span>
+        <span class="error-count">(${item.errorCount} errors)</span>
+      </div>`
+    ).join('');
+
+    // Tạo modal để hiển thị
+    const modal = document.createElement('div');
+    modal.className = 'error-modal';
+    modal.innerHTML = `
+      <div class="error-modal-content">
+        <h3>Words with Most Errors</h3>
+        <div class="error-list">
+          ${errorListHtml}
+        </div>
+        <button class="close-modal">Close</button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Xử lý đóng modal
+    modal.querySelector('.close-modal').onclick = () => {
+      modal.remove();
+    };
+  });
+}
+
+// Thêm CSS cho error list
+const style = document.createElement('style');
+style.textContent = `
+  .error-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .error-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+  }
+
+  .error-item {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .error-word {
+    font-weight: bold;
+    min-width: 100px;
+  }
+
+  .error-meaning {
+    flex: 1;
+  }
+
+  .error-count {
+    color: #ef4444;
+  }
+
+  .close-modal {
+    margin-top: 20px;
+    padding: 8px 16px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .close-modal:hover {
+    background: #2563eb;
+  }
+`;
+document.head.appendChild(style);
+
+// Thêm nút Error List khi trang load
+window.addEventListener('DOMContentLoaded', () => {
+  addErrorListButton();
+  if (listSection.style.display !== 'none' || listTab.classList.contains('active')) {
+    loadWords();
+  }
+});
+
+clearAllBtn.onclick = () => {
+  if (confirm("Are you sure you want to delete all words? This action cannot be undone.")) {
+    chrome.storage.local.set({ dictionary: [], wordErrors: {} }, () => {
+      loadWords();
+      alert("All words have been deleted.");
+    });
+  }
+};
