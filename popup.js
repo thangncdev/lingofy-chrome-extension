@@ -26,10 +26,16 @@ const searchInput = document.getElementById("searchInput");
 const clearAllBtn = document.getElementById("clearAllBtn");
 const achievementsTab = document.getElementById("achievementsTab");
 const achievementsSection = document.getElementById("achievementsSection");
+const openAddModalBtn = document.getElementById('openAddModalBtn');
+const addWordModal = document.getElementById('addWordModal');
+const saveModalBtn = document.getElementById('saveModalBtn');
+const cancelModalBtn = document.getElementById('cancelModalBtn');
+const modalWord = document.getElementById('modalWord');
+const modalMeaning = document.getElementById('modalMeaning');
 
 // Pagination variables
 let currentPage = 1;
-const itemsPerPage = 6;
+const itemsPerPage = 5;
 
 // Game variables
 let currentGameWord = null;
@@ -84,24 +90,55 @@ const BADGES = [
   }
 ];
 
-addTab.onclick = () => {
-  listSection.style.display = 'none';
-  addSection.style.display = 'block';
-  gameSection.style.display = 'none';
-  achievementsSection.style.display = 'none';
-  listTab.classList.remove('active');
-  addTab.classList.add('active');
-  gameTab.classList.remove('active');
-  achievementsTab.classList.remove('active');
+// Open modal
+openAddModalBtn.onclick = () => {
+  modalWord.value = '';
+  modalMeaning.value = '';
+  addWordModal.style.display = 'flex';
+  setTimeout(() => modalWord.focus(), 100);
+};
+// Close modal
+function closeAddModal() {
+  addWordModal.style.display = 'none';
+}
+cancelModalBtn.onclick = closeAddModal;
+
+// Save new word from modal
+saveModalBtn.onclick = () => {
+  const word = modalWord.value.trim();
+  const meaning = modalMeaning.value.trim();
+  if (!word || !meaning) return alert('Please fill both fields.');
+  chrome.storage.local.get({ dictionary: [] }, (result) => {
+    const updated = [...result.dictionary, { word, meaning }];
+    chrome.storage.local.set({ dictionary: updated }, () => {
+      closeAddModal();
+      loadWords();
+    });
+  });
 };
 
+// Enter key submits in modal
+modalWord.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveModalBtn.click(); });
+modalMeaning.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveModalBtn.click(); });
+
+// Handle quick-add from context menu
+chrome.storage.local.get(['selectedWord'], (result) => {
+  if (result.selectedWord) {
+    // Open modal and prefill word
+    modalWord.value = result.selectedWord;
+    modalMeaning.value = '';
+    addWordModal.style.display = 'flex';
+    setTimeout(() => modalMeaning.focus(), 100);
+    chrome.storage.local.remove(['selectedWord']);
+  }
+});
+
+// Update tab switching logic to remove Add tab/section
 listTab.onclick = () => {
   listSection.style.display = 'block';
-  addSection.style.display = 'none';
   gameSection.style.display = 'none';
   achievementsSection.style.display = 'none';
   listTab.classList.add('active');
-  addTab.classList.remove('active');
   gameTab.classList.remove('active');
   achievementsTab.classList.remove('active');
   loadWords();
@@ -109,29 +146,46 @@ listTab.onclick = () => {
 
 gameTab.onclick = () => {
   listSection.style.display = 'none';
-  addSection.style.display = 'none';
   gameSection.style.display = 'block';
   achievementsSection.style.display = 'none';
   listTab.classList.remove('active');
-  addTab.classList.remove('active');
   gameTab.classList.add('active');
   achievementsTab.classList.remove('active');
+  addErrorListButton();
   loadNewGameWord();
 };
 
-saveBtn.onclick = () => {
-  const word = wordInput.value.trim();
-  const meaning = meaningInput.value.trim();
-  if (!word || !meaning) return alert("Please fill both fields.");
-
-  chrome.storage.local.get({ dictionary: [] }, (result) => {
-    const updated = [...result.dictionary, { word, meaning }];
-    chrome.storage.local.set({ dictionary: updated }, () => {
-      wordInput.value = '';
-      meaningInput.value = '';
-    });
-  });
+achievementsTab.onclick = () => {
+  listSection.style.display = 'none';
+  gameSection.style.display = 'none';
+  achievementsSection.style.display = 'block';
+  listTab.classList.remove('active');
+  gameTab.classList.remove('active');
+  achievementsTab.classList.add('active');
+  updateAchievements();
 };
+
+window.addEventListener('DOMContentLoaded', () => {
+  listSection.style.display = 'block';
+  gameSection.style.display = 'none';
+  achievementsSection.style.display = 'none';
+  listTab.classList.add('active');
+  gameTab.classList.remove('active');
+  achievementsTab.classList.remove('active');
+  loadWords();
+  
+  // Update version in footer
+  const versionSpan = document.querySelector('.author-info span:nth-child(2)');
+  if (versionSpan) {
+    const manifest = chrome.runtime.getManifest();
+    versionSpan.textContent = `Version: ${manifest.version}`;
+  }
+  
+  // Initialize achievements if achievements tab is visible
+  if (achievementsSection.style.display !== 'none') {
+    updateAchievements();
+  }
+});
 
 function openGoogleTranslate(text) {
   const url = `https://translate.google.com/?sl=auto&tl=vi&text=${encodeURIComponent(text)}&op=translate`;
@@ -477,67 +531,13 @@ exportBtn.onclick = () => {
   });
 };
 
-// Kiểm tra và xử lý từ được chọn từ context menu
-chrome.storage.local.get(['selectedWord'], (result) => {
-  if (result.selectedWord) {
-    // Chuyển đến tab Add
-    addTab.click();
-    // Điền từ vào input
-    wordInput.value = result.selectedWord;
-    // Focus vào ô meaning
-    meaningInput.focus();
-    // Xóa từ đã lưu
-    chrome.storage.local.remove(['selectedWord']);
-  }
-});
-
-// On DOMContentLoaded, only show List section by default
-window.addEventListener('DOMContentLoaded', () => {
-  addErrorListButton();
-  listSection.style.display = 'block';
-  addSection.style.display = 'none';
-  gameSection.style.display = 'none';
-  achievementsSection.style.display = 'none';
-  listTab.classList.add('active');
-  addTab.classList.remove('active');
-  gameTab.classList.remove('active');
-  achievementsTab.classList.remove('active');
-  loadWords();
-  
-  // Update version in footer
-  const versionSpan = document.querySelector('.author-info span:nth-child(2)');
-  if (versionSpan) {
-    const manifest = chrome.runtime.getManifest();
-    versionSpan.textContent = `Version: ${manifest.version}`;
-  }
-  
-  // Initialize achievements if achievements tab is visible
-  if (achievementsSection.style.display !== 'none') {
-    updateAchievements();
-  }
-});
-
-gameAnswer.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    checkAnswer();
-  }
-});
-
-wordInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    saveBtn.click();
-  }
-});
-
-meaningInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    saveBtn.click();
-  }
-});
-
 // Thêm nút để xem danh sách từ sai nhiều
 function addErrorListButton() {
-  const listControls = document.querySelector('.list-controls');
+  const gameControls = document.querySelector('.game-controls');
+  if (!gameControls) return;
+  // Remove existing button if present
+  const oldBtn = document.getElementById('errorListBtn');
+  if (oldBtn) oldBtn.remove();
   const errorListBtn = document.createElement('button');
   errorListBtn.id = 'errorListBtn';
   errorListBtn.className = 'control-btn';
@@ -550,7 +550,7 @@ function addErrorListButton() {
     Error List
   `;
   errorListBtn.onclick = showErrorList;
-  listControls.appendChild(errorListBtn);
+  gameControls.appendChild(errorListBtn);
 }
 
 function showErrorList() {
@@ -672,19 +672,6 @@ clearAllBtn.onclick = () => {
       alert("All words have been deleted.");
     });
   }
-};
-
-// Add achievements tab click handler
-achievementsTab.onclick = () => {
-  listSection.style.display = 'none';
-  addSection.style.display = 'none';
-  gameSection.style.display = 'none';
-  achievementsSection.style.display = 'block';
-  listTab.classList.remove('active');
-  addTab.classList.remove('active');
-  gameTab.classList.remove('active');
-  achievementsTab.classList.add('active');
-  updateAchievements();
 };
 
 function updateAchievements() {

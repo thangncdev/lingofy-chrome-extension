@@ -7,12 +7,12 @@
 <body>
   <div class="tabs">
     <button id="listTab" class="tab active">List</button>
-    <button id="addTab" class="tab">Add</button>
     <button id="gameTab" class="tab">Game</button>
     <button id="achievementsTab" class="tab">Achievements</button>
   </div>
 
   <div id="listSection">
+    <button id="openAddModalBtn" class="add-word-btn">Add New Word</button>
     <input id="searchInput" type="text" class="search-input" placeholder="Search word or meaning..." />
     <div id="wordList"></div>
     <div class="pagination">
@@ -28,10 +28,17 @@
     </div>
   </div>
 
-  <div id="addSection" style="display: none;">
-    <input id="word" style="width: 100%;" type="text" placeholder="Word" />
-    <input id="meaning" style="width: 100%;" type="text" placeholder="Meaning" />
-    <button id="saveBtn">Save</button>
+  <!-- Add Word Modal -->
+  <div id="addWordModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h3>Add New Word</h3>
+      <input id="modalWord" type="text" placeholder="Word" />
+      <input id="modalMeaning" type="text" placeholder="Meaning" />
+      <div class="modal-actions">
+        <button id="saveModalBtn" class="control-btn primary">Save</button>
+        <button id="cancelModalBtn" class="control-btn">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <div id="gameSection" style="display: none;">
@@ -54,6 +61,7 @@
       </div>
       <div id="gameResult" class="game-result"></div>
     </div>
+    <div class="game-controls"></div>
   </div>
 
   <div id="achievementsSection" style="display: none;">
