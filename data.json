@@ -1,0 +1,434 @@
+[
+  {
+    "word": "submit",
+    "meaning": "nộp, đệ trình",
+    "type": "verb",
+    "example": "Please submit your report by Friday."
+  },
+  {
+    "word": "approve",
+    "meaning": "phê duyệt, chấp thuận",
+    "type": "verb",
+    "example": "The manager approved the proposal."
+  },
+  {
+    "word": "candidate",
+    "meaning": "ứng viên",
+    "type": "noun",
+    "example": "She is a strong candidate for the position."
+  },
+  {
+    "word": "inventory",
+    "meaning": "hàng tồn kho",
+    "type": "noun",
+    "example": "The inventory will be checked monthly."
+  },
+  {
+    "word": "conference",
+    "meaning": "hội nghị",
+    "type": "noun",
+    "example": "The annual conference will be held in Tokyo."
+  },
+  {
+    "word": "efficient",
+    "meaning": "hiệu quả",
+    "type": "adjective",
+    "example": "This new method is more efficient."
+  },
+  {
+    "word": "deadline",
+    "meaning": "hạn chót",
+    "type": "noun",
+    "example": "We must meet the deadline."
+  },
+  {
+    "word": "negotiation",
+    "meaning": "cuộc đàm phán",
+    "type": "noun",
+    "example": "The negotiation lasted several hours."
+  },
+  {
+    "word": "reschedule",
+    "meaning": "lên lịch lại",
+    "type": "verb",
+    "example": "Can we reschedule the meeting?"
+  },
+  {
+    "word": "promotion",
+    "meaning": "sự thăng chức / khuyến mãi",
+    "type": "noun",
+    "example": "He received a promotion last month."
+  },
+  {
+    "word": "budget",
+    "meaning": "ngân sách",
+    "type": "noun",
+    "example": "We need to stay within the budget."
+  },
+  {
+    "word": "contract",
+    "meaning": "hợp đồng",
+    "type": "noun",
+    "example": "They signed a two-year contract."
+  },
+  {
+    "word": "client",
+    "meaning": "khách hàng",
+    "type": "noun",
+    "example": "The client is very satisfied with our service."
+  },
+  {
+    "word": "invoice",
+    "meaning": "hóa đơn",
+    "type": "noun",
+    "example": "The invoice is due next week."
+  },
+  {
+    "word": "supplier",
+    "meaning": "nhà cung cấp",
+    "type": "noun",
+    "example": "We changed our main supplier last year."
+  },
+  {
+    "word": "shipment",
+    "meaning": "lô hàng",
+    "type": "noun",
+    "example": "The shipment will arrive tomorrow."
+  },
+  {
+    "word": "refund",
+    "meaning": "hoàn tiền",
+    "type": "noun",
+    "example": "Customers can request a refund within 30 days."
+  },
+  {
+    "word": "postpone",
+    "meaning": "hoãn lại",
+    "type": "verb",
+    "example": "The event was postponed due to bad weather."
+  },
+  {
+    "word": "estimate",
+    "meaning": "ước tính",
+    "type": "noun",
+    "example": "We received an estimate for the repairs."
+  },
+  {
+    "word": "advertisement",
+    "meaning": "quảng cáo",
+    "type": "noun",
+    "example": "The advertisement appeared in a newspaper."
+  },
+  {
+    "word": "department",
+    "meaning": "phòng ban",
+    "type": "noun",
+    "example": "She works in the HR department."
+  },
+  {
+    "word": "equipment",
+    "meaning": "thiết bị",
+    "type": "noun",
+    "example": "The equipment needs to be replaced."
+  },
+  {
+    "word": "balance",
+    "meaning": "số dư",
+    "type": "noun",
+    "example": "Your account balance is low."
+  },
+  {
+    "word": "productivity",
+    "meaning": "năng suất",
+    "type": "noun",
+    "example": "The new software improved productivity."
+  },
+  {
+    "word": "policy",
+    "meaning": "chính sách",
+    "type": "noun",
+    "example": "This is our new return policy."
+  },
+  {
+    "word": "logistics",
+    "meaning": "hậu cần",
+    "type": "noun",
+    "example": "Logistics must be arranged in advance."
+  },
+  {
+    "word": "facilities",
+    "meaning": "cơ sở vật chất",
+    "type": "noun",
+    "example": "The company upgraded its facilities."
+  },
+  {
+    "word": "enroll",
+    "meaning": "đăng ký",
+    "type": "verb",
+    "example": "You can enroll in the course online."
+  },
+  {
+    "word": "delegate",
+    "meaning": "giao phó, ủy quyền",
+    "type": "verb",
+    "example": "Managers should delegate tasks efficiently."
+  },
+  {
+    "word": "agenda",
+    "meaning": "chương trình nghị sự",
+    "type": "noun",
+    "example": "The first item on the agenda is sales."
+  },
+  {
+    "word": "announcement",
+    "meaning": "thông báo",
+    "type": "noun",
+    "example": "The announcement was made this morning."
+  },
+  {
+    "word": "procedure",
+    "meaning": "thủ tục",
+    "type": "noun",
+    "example": "Please follow the standard procedure."
+  },
+  {
+    "word": "consult",
+    "meaning": "tư vấn",
+    "type": "verb",
+    "example": "You should consult a legal expert."
+  },
+  {
+    "word": "terminate",
+    "meaning": "chấm dứt",
+    "type": "verb",
+    "example": "The contract was terminated early."
+  },
+  {
+    "word": "forecast",
+    "meaning": "dự báo",
+    "type": "noun",
+    "example": "The sales forecast looks promising."
+  },
+  {
+    "word": "acquisition",
+    "meaning": "sự mua lại",
+    "type": "noun",
+    "example": "The acquisition was finalized yesterday."
+  },
+  {
+    "word": "authorize",
+    "meaning": "ủy quyền",
+    "type": "verb",
+    "example": "Only the manager can authorize expenses."
+  },
+  {
+    "word": "implement",
+    "meaning": "triển khai",
+    "type": "verb",
+    "example": "The system will be implemented next week."
+  },
+  {
+    "word": "strategy",
+    "meaning": "chiến lược",
+    "type": "noun",
+    "example": "We need a new marketing strategy."
+  },
+  {
+    "word": "revenue",
+    "meaning": "doanh thu",
+    "type": "noun",
+    "example": "The company’s revenue increased 10%."
+  },
+  {
+    "word": "complaint",
+    "meaning": "phàn nàn",
+    "type": "noun",
+    "example": "Customer complaints were handled quickly."
+  },
+  {
+    "word": "expand",
+    "meaning": "mở rộng",
+    "type": "verb",
+    "example": "The business is planning to expand overseas."
+  },
+  {
+    "word": "merge",
+    "meaning": "sáp nhập",
+    "type": "verb",
+    "example": "Two departments will be merged."
+  },
+  {
+    "word": "resignation",
+    "meaning": "sự từ chức",
+    "type": "noun",
+    "example": "She submitted her resignation this morning."
+  },
+  {
+    "word": "distribute",
+    "meaning": "phân phối",
+    "type": "verb",
+    "example": "The flyers will be distributed downtown."
+  },
+  {
+    "word": "headquarters",
+    "meaning": "trụ sở chính",
+    "type": "noun",
+    "example": "Our headquarters is in New York."
+  },
+  {
+    "word": "evaluate",
+    "meaning": "đánh giá",
+    "type": "verb",
+    "example": "The supervisor will evaluate your work."
+  },
+  {
+    "word": "fund",
+    "meaning": "quỹ, cấp tiền",
+    "type": "noun",
+    "example": "The project was funded by investors."
+  },
+  {
+    "word": "attend",
+    "meaning": "tham dự",
+    "type": "verb",
+    "example": "Over 100 people attended the seminar."
+  },
+  {
+    "word": "notice",
+    "meaning": "thông báo, chú ý",
+    "type": "noun",
+    "example": "The notice is posted on the board."
+  },
+  {
+    "word": "transfer",
+    "meaning": "chuyển công tác",
+    "type": "verb",
+    "example": "He was transferred to another branch."
+  },
+  {
+    "word": "outline",
+    "meaning": "phác thảo",
+    "type": "verb",
+    "example": "She outlined the key points of the plan."
+  },
+  {
+    "word": "approve",
+    "meaning": "phê duyệt",
+    "type": "verb",
+    "example": "The board approved the budget proposal."
+  },
+  {
+    "word": "host",
+    "meaning": "tổ chức, chủ trì",
+    "type": "verb",
+    "example": "They will host a networking event."
+  },
+  {
+    "word": "verify",
+    "meaning": "xác minh",
+    "type": "verb",
+    "example": "Please verify your identity."
+  },
+  {
+    "word": "inventory",
+    "meaning": "kiểm kê",
+    "type": "verb",
+    "example": "The staff is inventorying the stock."
+  },
+  {
+    "word": "confirm",
+    "meaning": "xác nhận",
+    "type": "verb",
+    "example": "Can you confirm the booking?"
+  },
+  {
+    "word": "orientation",
+    "meaning": "buổi định hướng",
+    "type": "noun",
+    "example": "New employees must attend orientation."
+  },
+  {
+    "word": "lease",
+    "meaning": "hợp đồng thuê",
+    "type": "noun",
+    "example": "We renewed our lease for another year."
+  },
+  {
+    "word": "bonus",
+    "meaning": "tiền thưởng",
+    "type": "noun",
+    "example": "Employees received a holiday bonus."
+  },
+  {
+    "word": "feedback",
+    "meaning": "phản hồi",
+    "type": "noun",
+    "example": "We appreciate your feedback."
+  },
+  {
+    "word": "broker",
+    "meaning": "môi giới",
+    "type": "noun",
+    "example": "The broker handled the transaction."
+  },
+  {
+    "word": "oversee",
+    "meaning": "giám sát",
+    "type": "verb",
+    "example": "She oversees three departments."
+  },
+  {
+    "word": "outsource",
+    "meaning": "thuê ngoài",
+    "type": "verb",
+    "example": "They decided to outsource IT support."
+  },
+  {
+    "word": "estimate",
+    "meaning": "bảng ước tính",
+    "type": "noun",
+    "example": "The contractor gave us an estimate."
+  },
+  {
+    "word": "branch",
+    "meaning": "chi nhánh",
+    "type": "noun",
+    "example": "Our new branch will open next month."
+  },
+  {
+    "word": "retail",
+    "meaning": "bán lẻ",
+    "type": "noun",
+    "example": "She works in retail."
+  },
+  {
+    "word": "wholesale",
+    "meaning": "bán sỉ",
+    "type": "noun",
+    "example": "We offer wholesale prices."
+  },
+  {
+    "word": "agenda",
+    "meaning": "chương trình họp",
+    "type": "noun",
+    "example": "Let’s review the agenda."
+  },
+  {
+    "word": "allocate",
+    "meaning": "phân bổ",
+    "type": "verb",
+    "example": "Funds were allocated to each team."
+  },
+  {
+    "word": "renew",
+    "meaning": "gia hạn",
+    "type": "verb",
+    "example": "They renewed their subscription."
+  },
+  {
+    "word": "policyholder",
+    "meaning": "người giữ hợp đồng bảo hiểm",
+    "type": "noun",
+    "example": "Policyholders must update their details."
+  }
+]

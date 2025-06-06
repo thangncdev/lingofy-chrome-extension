@@ -430,6 +430,13 @@ window.addEventListener('DOMContentLoaded', () => {
   if (listSection.style.display !== 'none' || listTab.classList.contains('active')) {
     loadWords();
   }
+  
+  // Update version in footer
+  const versionSpan = document.querySelector('.author-info span:nth-child(2)');
+  if (versionSpan) {
+    const manifest = chrome.runtime.getManifest();
+    versionSpan.textContent = `Version: ${manifest.version}`;
+  }
 });
 
 gameAnswer.addEventListener('keydown', (e) => {
@@ -579,14 +586,6 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
-
-// Thêm nút Error List khi trang load
-window.addEventListener('DOMContentLoaded', () => {
-  addErrorListButton();
-  if (listSection.style.display !== 'none' || listTab.classList.contains('active')) {
-    loadWords();
-  }
-});
 
 clearAllBtn.onclick = () => {
   if (confirm("Are you sure you want to delete all words? This action cannot be undone.")) {

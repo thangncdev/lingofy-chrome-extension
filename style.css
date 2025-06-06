@@ -11,6 +11,7 @@ body {
   min-height: 500px;
   background: #f8fafc;
   color: #1e293b;
+  padding-bottom: 60px;
 }
 
 /* Tab styles */
@@ -509,4 +510,47 @@ input:checked + .slider:before {
   background: #fef2f2;
   border-color: #dc2626;
   color: #dc2626;
+}
+
+/* Footer styles */
+.extension-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-info {
+  display: flex;
+  gap: 12px;
+}
+
+.contact-link {
+  color: #3b82f6;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
 }
