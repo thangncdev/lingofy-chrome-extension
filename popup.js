@@ -24,10 +24,18 @@ const switchModeInput = document.getElementById("switchMode");
 const currentModeText = document.getElementById("currentMode");
 const searchInput = document.getElementById("searchInput");
 const clearAllBtn = document.getElementById("clearAllBtn");
+const achievementsTab = document.getElementById("achievementsTab");
+const achievementsSection = document.getElementById("achievementsSection");
+const openAddModalBtn = document.getElementById('openAddModalBtn');
+const addWordModal = document.getElementById('addWordModal');
+const saveModalBtn = document.getElementById('saveModalBtn');
+const cancelModalBtn = document.getElementById('cancelModalBtn');
+const modalWord = document.getElementById('modalWord');
+const modalMeaning = document.getElementById('modalMeaning');
 
 // Pagination variables
 let currentPage = 1;
-const itemsPerPage = 6;
+const itemsPerPage = 5;
 
 // Game variables
 let currentGameWord = null;
@@ -35,48 +43,149 @@ let isShowingWord = false; // true = show word, false = show meaning
 let currentOptions = [];
 let searchKeyword = "";
 
-addTab.onclick = () => {
-  addSection.style.display = 'block';
-  listSection.style.display = 'none';
-  gameSection.style.display = 'none';
-  addTab.classList.add('active');
-  listTab.classList.remove('active');
-  gameTab.classList.remove('active');
+// Achievement system
+const LEVEL_THRESHOLDS = [
+  0,      // Level 1
+  10,     // Level 2
+  50,     // Level 3
+  100,    // Level 4
+  200     // Level 5
+];
+
+const BADGES = [
+  {
+    id: 'level-1',
+    name: 'Beginner',
+    description: 'Start your learning journey',
+    icon: 'images/beginner.png',
+    level: 1
+  },
+  {
+    id: 'level-2',
+    name: 'Intermediate',
+    description: 'Keep up the good work!',
+    icon: 'images/intermediate.png',
+    level: 2
+  },
+  {
+    id: 'level-3',
+    name: 'Advanced',
+    description: 'You\'re getting really good!',
+    icon: 'images/advanced.png',
+    level: 3
+  },
+  {
+    id: 'level-4',
+    name: 'Expert',
+    description: 'Almost there!',
+    icon: 'images/expert.png',
+    level: 4
+  },
+  {
+    id: 'level-5',
+    name: 'Master',
+    description: 'You\'ve reached the top!',
+    icon: 'images/master.png',
+    level: 5
+  }
+];
+
+// Open modal
+openAddModalBtn.onclick = () => {
+  modalWord.value = '';
+  modalMeaning.value = '';
+  addWordModal.style.display = 'flex';
+  setTimeout(() => modalWord.focus(), 100);
+};
+// Close modal
+function closeAddModal() {
+  addWordModal.style.display = 'none';
+}
+cancelModalBtn.onclick = closeAddModal;
+
+// Save new word from modal
+saveModalBtn.onclick = () => {
+  const word = modalWord.value.trim();
+  const meaning = modalMeaning.value.trim();
+  if (!word || !meaning) return alert('Please fill both fields.');
+  chrome.storage.local.get({ dictionary: [] }, (result) => {
+    const updated = [...result.dictionary, { word, meaning }];
+    chrome.storage.local.set({ dictionary: updated }, () => {
+      closeAddModal();
+      loadWords();
+    });
+  });
 };
 
+// Enter key submits in modal
+modalWord.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveModalBtn.click(); });
+modalMeaning.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveModalBtn.click(); });
+
+// Handle quick-add from context menu
+chrome.storage.local.get(['selectedWord'], (result) => {
+  if (result.selectedWord) {
+    // Open modal and prefill word
+    modalWord.value = result.selectedWord;
+    modalMeaning.value = '';
+    addWordModal.style.display = 'flex';
+    setTimeout(() => modalMeaning.focus(), 100);
+    chrome.storage.local.remove(['selectedWord']);
+  }
+});
+
+// Update tab switching logic to remove Add tab/section
 listTab.onclick = () => {
-  addSection.style.display = 'none';
   listSection.style.display = 'block';
   gameSection.style.display = 'none';
-  addTab.classList.remove('active');
+  achievementsSection.style.display = 'none';
   listTab.classList.add('active');
   gameTab.classList.remove('active');
+  achievementsTab.classList.remove('active');
   loadWords();
 };
 
 gameTab.onclick = () => {
-  addSection.style.display = 'none';
   listSection.style.display = 'none';
   gameSection.style.display = 'block';
-  addTab.classList.remove('active');
+  achievementsSection.style.display = 'none';
   listTab.classList.remove('active');
   gameTab.classList.add('active');
+  achievementsTab.classList.remove('active');
+  addErrorListButton();
   loadNewGameWord();
 };
 
-saveBtn.onclick = () => {
-  const word = wordInput.value.trim();
-  const meaning = meaningInput.value.trim();
-  if (!word || !meaning) return alert("Please fill both fields.");
-
-  chrome.storage.local.get({ dictionary: [] }, (result) => {
-    const updated = [...result.dictionary, { word, meaning }];
-    chrome.storage.local.set({ dictionary: updated }, () => {
-      wordInput.value = '';
-      meaningInput.value = '';
-    });
-  });
+achievementsTab.onclick = () => {
+  listSection.style.display = 'none';
+  gameSection.style.display = 'none';
+  achievementsSection.style.display = 'block';
+  listTab.classList.remove('active');
+  gameTab.classList.remove('active');
+  achievementsTab.classList.add('active');
+  updateAchievements();
 };
+
+window.addEventListener('DOMContentLoaded', () => {
+  listSection.style.display = 'block';
+  gameSection.style.display = 'none';
+  achievementsSection.style.display = 'none';
+  listTab.classList.add('active');
+  gameTab.classList.remove('active');
+  achievementsTab.classList.remove('active');
+  loadWords();
+  
+  // Update version in footer
+  const versionSpan = document.querySelector('.author-info span:nth-child(2)');
+  if (versionSpan) {
+    const manifest = chrome.runtime.getManifest();
+    versionSpan.textContent = `Version: ${manifest.version}`;
+  }
+  
+  // Initialize achievements if achievements tab is visible
+  if (achievementsSection.style.display !== 'none') {
+    updateAchievements();
+  }
+});
 
 function openGoogleTranslate(text) {
   const url = `https://translate.google.com/?sl=auto&tl=vi&text=${encodeURIComponent(text)}&op=translate`;
@@ -107,37 +216,41 @@ function loadWords(filter = "") {
     const pageWords = shuffledWords.slice(start, end);
 
     wordList.innerHTML = '';
-    pageWords.forEach((entry, index) => {
-      const li = document.createElement("li");
-      
-      // Tạo container cho từ và nghĩa
-      const contentDiv = document.createElement("div");
-      contentDiv.className = "word-content";
-      contentDiv.textContent = `${entry.word}: ${entry.meaning}`;
-      li.appendChild(contentDiv);
+    if (pageWords.length === 0) {
+      wordList.innerHTML = '<div class="empty-list-message" style="text-align:center; color:#64748b; padding: 32px 0; font-size: 16px;">No words have been added yet.</div>';
+    } else {
+      pageWords.forEach((entry, index) => {
+        const li = document.createElement("li");
+        
+        // Tạo container cho từ và nghĩa
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "word-content";
+        contentDiv.textContent = `${entry.word}: ${entry.meaning}`;
+        li.appendChild(contentDiv);
 
-      // Tạo container cho các nút
-      const buttonsDiv = document.createElement("div");
-      buttonsDiv.className = "word-buttons";
+        // Tạo container cho các nút
+        const buttonsDiv = document.createElement("div");
+        buttonsDiv.className = "word-buttons";
 
-      // Nút Google Translate
-      const translateBtn = document.createElement("span");
-      translateBtn.textContent = "Detail";
-      translateBtn.className = "translate-text";
-      translateBtn.title = "Translate on Google";
-      translateBtn.onclick = () => openGoogleTranslate(entry.word);
-      buttonsDiv.appendChild(translateBtn);
+        // Nút Google Translate
+        const translateBtn = document.createElement("span");
+        translateBtn.textContent = "Detail";
+        translateBtn.className = "translate-text";
+        translateBtn.title = "Translate on Google";
+        translateBtn.onclick = () => openGoogleTranslate(entry.word);
+        buttonsDiv.appendChild(translateBtn);
 
-      // Nút Delete
-      const delBtn = document.createElement("span");
-      delBtn.textContent = "Delete";
-      delBtn.className = "delete-text";
-      delBtn.onclick = () => deleteWord(start + index);
-      buttonsDiv.appendChild(delBtn);
+        // Nút Delete
+        const delBtn = document.createElement("span");
+        delBtn.textContent = "Delete";
+        delBtn.className = "delete-text";
+        delBtn.onclick = () => deleteWord(start + index);
+        buttonsDiv.appendChild(delBtn);
 
-      li.appendChild(buttonsDiv);
-      wordList.appendChild(li);
-    });
+        li.appendChild(buttonsDiv);
+        wordList.appendChild(li);
+      });
+    }
 
     // Update pagination controls
     pageInfo.textContent = `Page ${currentPage} of ${totalPages || 1}`;
@@ -201,9 +314,11 @@ function updateModeText() {
 function loadNewGameWord() {
   chrome.storage.local.get({ dictionary: [] }, (result) => {
     if (result.dictionary.length === 0) {
-      gameQuestion.textContent = "No words in dictionary!";
+      gameQuestion.textContent = "No words have been added yet.";
       gameAnswer.value = "";
       gameResult.textContent = "";
+      const optionsContainer = document.getElementById('gameOptions');
+      optionsContainer.innerHTML = '';
       return;
     }
 
@@ -305,6 +420,17 @@ function checkAnswer() {
   if (userAnswer === correctAnswer) {
     gameResult.textContent = "Correct!";
     gameResult.style.color = "#22c55e";
+    
+    // Increment correct answers count
+    chrome.storage.local.get({ correctAnswers: 0 }, (result) => {
+      const newCount = (result.correctAnswers || 0) + 1;
+      chrome.storage.local.set({ correctAnswers: newCount }, () => {
+        // Update achievements if achievements tab is visible
+        if (achievementsSection.style.display !== 'none') {
+          updateAchievements();
+        }
+      });
+    });
   } else {
     // Lấy số lần sai để hiển thị
     chrome.storage.local.get({ wordErrors: {} }, (result) => {
@@ -411,55 +537,13 @@ exportBtn.onclick = () => {
   });
 };
 
-// Kiểm tra và xử lý từ được chọn từ context menu
-chrome.storage.local.get(['selectedWord'], (result) => {
-  if (result.selectedWord) {
-    // Chuyển đến tab Add
-    addTab.click();
-    // Điền từ vào input
-    wordInput.value = result.selectedWord;
-    // Focus vào ô meaning
-    meaningInput.focus();
-    // Xóa từ đã lưu
-    chrome.storage.local.remove(['selectedWord']);
-  }
-});
-
-// Khi popup load, nếu tab List đang active thì load luôn danh sách
-window.addEventListener('DOMContentLoaded', () => {
-  if (listSection.style.display !== 'none' || listTab.classList.contains('active')) {
-    loadWords();
-  }
-  
-  // Update version in footer
-  const versionSpan = document.querySelector('.author-info span:nth-child(2)');
-  if (versionSpan) {
-    const manifest = chrome.runtime.getManifest();
-    versionSpan.textContent = `Version: ${manifest.version}`;
-  }
-});
-
-gameAnswer.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    checkAnswer();
-  }
-});
-
-wordInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    saveBtn.click();
-  }
-});
-
-meaningInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    saveBtn.click();
-  }
-});
-
 // Thêm nút để xem danh sách từ sai nhiều
 function addErrorListButton() {
-  const listControls = document.querySelector('.list-controls');
+  const gameControls = document.querySelector('.game-controls');
+  if (!gameControls) return;
+  // Remove existing button if present
+  const oldBtn = document.getElementById('errorListBtn');
+  if (oldBtn) oldBtn.remove();
   const errorListBtn = document.createElement('button');
   errorListBtn.id = 'errorListBtn';
   errorListBtn.className = 'control-btn';
@@ -472,7 +556,7 @@ function addErrorListButton() {
     Error List
   `;
   errorListBtn.onclick = showErrorList;
-  listControls.appendChild(errorListBtn);
+  gameControls.appendChild(errorListBtn);
 }
 
 function showErrorList() {
@@ -595,3 +679,55 @@ clearAllBtn.onclick = () => {
     });
   }
 };
+
+function updateAchievements() {
+  chrome.storage.local.get({ correctAnswers: 0 }, (result) => {
+    const correctAnswers = result.correctAnswers || 0;
+    
+    // Update stats
+    document.getElementById('totalCorrectAnswers').textContent = correctAnswers;
+    
+    // Calculate current level
+    let currentLevel = 1;
+    for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+      if (correctAnswers >= LEVEL_THRESHOLDS[i]) {
+        currentLevel = i + 1;
+        break;
+      }
+    }
+    document.getElementById('currentLevel').textContent = currentLevel;
+    
+    // Show current badge at top of stats-summary
+    const currentBadge = BADGES.find(b => b.level === currentLevel);
+    const badgeDisplay = document.getElementById('currentBadgeDisplay');
+    if (currentBadge && badgeDisplay) {
+      badgeDisplay.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <img src="${currentBadge.icon}" alt="${currentBadge.name}" style="width: 56px; height: 56px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); background: #f1f5f9; margin-bottom: 2px;">
+          <div style="font-weight: 600; color: #1e293b; font-size: 15px;">${currentBadge.name}</div>
+        </div>
+      `;
+    }
+    
+    // Calculate progress to next level
+    const nextLevelThreshold = LEVEL_THRESHOLDS[currentLevel] || LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
+    const currentLevelThreshold = LEVEL_THRESHOLDS[currentLevel - 1];
+    const progress = ((correctAnswers - currentLevelThreshold) / (nextLevelThreshold - currentLevelThreshold)) * 100;
+    document.getElementById('levelProgress').style.width = `${Math.min(progress, 100)}%`;
+    
+    // Update badges
+    const badgesList = document.getElementById('badgesList');
+    badgesList.innerHTML = '';
+    
+    BADGES.forEach(badge => {
+      const badgeElement = document.createElement('div');
+      badgeElement.className = `badge-item ${badge.level > currentLevel ? 'locked' : ''}`;
+      badgeElement.innerHTML = `
+        <div class=\"badge-icon badge-level-${badge.level}\"><img src=\"${badge.icon}\" alt=\"${badge.name}\" style=\"width: 40px; height: 40px; object-fit: contain; opacity: ${badge.level > currentLevel ? 0.5 : 1};\"></div>
+        <div class=\"badge-name\">${badge.name}</div>
+        <div class=\"badge-description\">${badge.description}</div>
+      `;
+      badgesList.appendChild(badgeElement);
+    });
+  });
+}

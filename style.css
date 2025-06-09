@@ -199,7 +199,6 @@ body {
   background: #e2e8f0;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border-color: #cbd5e1;
 }
 
 .control-btn:active {
@@ -553,4 +552,276 @@ input:checked + .slider:before {
 .contact-link:hover {
   color: #2563eb;
   text-decoration: underline;
+}
+
+/* Achievements styles */
+.achievements-container {
+  padding: 16px;
+}
+
+.stats-summary {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-label {
+  color: #64748b;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.badges-container {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.badges-container h3 {
+  margin: 0 0 16px 0;
+  color: #1e293b;
+  font-size: 16px;
+}
+
+.badges-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px;
+}
+
+.badge-item {
+  background: white;
+  border-radius: 12px;
+  padding: 16px 8px 12px 8px;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+}
+
+.badge-item:hover {
+  transform: translateY(-2px);
+}
+
+.badge-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 8px;
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+  overflow: hidden;
+}
+
+.badge-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.badge-name {
+  font-size: 12px;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.badge-description {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.badge-item.locked {
+  opacity: 0.5;
+}
+
+.badge-item.locked .badge-icon {
+  background: #e2e8f0;
+  color: #94a3b8;
+}
+
+/* Level badges colors */
+.badge-level-1 { color: #3b82f6; } /* Blue */
+.badge-level-2 { color: #10b981; } /* Green */
+.badge-level-3 { color: #f59e0b; } /* Yellow */
+.badge-level-4 { color: #ef4444; } /* Red */
+.badge-level-5 { color: #8b5cf6; } /* Purple */
+
+.add-word-btn {
+  display: block;
+  /* margin: 16px auto 12px; */
+  margin-bottom: 12px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.add-word-btn:hover {
+  background: #2563eb;
+  box-shadow: 0 4px 16px rgba(59,130,246,0.15);
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* Modal styles (already present, but ensure beautiful) */
+.modal {
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 28px 20px 28px;
+  min-width: 340px;
+  max-width: 95vw;
+  box-shadow: 0 8px 32px rgba(59,130,246,0.12), 0 1.5px 8px rgba(0,0,0,0.08);
+  position: relative;
+  animation: modalIn 0.18s cubic-bezier(.4,2,.6,1) 1;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.close-modal {
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  font-size: 22px;
+  color: #64748b;
+  cursor: pointer;
+  font-weight: bold;
+}
+.close-modal:hover {
+  color: #ef4444;
+}
+
+.modal-content h3 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+}
+
+.modal-content input[type='text'] {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 15px;
+  margin-bottom: 14px;
+  outline: none;
+  transition: border 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-content input[type='text']:focus {
+  border: 1.5px solid #3b82f6;
+  background: #f0f7ff;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.control-btn.primary {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.control-btn.primary:hover {
+  background: #2563eb;
+}
+
+.control-btn {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+}
+
+.control-btn:hover {
+  background: #e2e8f0;
+  border: 1.5px solid #cbd5e1;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+#gameSection .control-btn {
+  min-width: 120px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 24px;
 }
