@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lingofy Dictionary",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A personal dictionary extension to help you learn new words",
   "permissions": [
     "storage",
