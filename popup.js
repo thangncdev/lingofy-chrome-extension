@@ -216,37 +216,41 @@ function loadWords(filter = "") {
     const pageWords = shuffledWords.slice(start, end);
 
     wordList.innerHTML = '';
-    pageWords.forEach((entry, index) => {
-      const li = document.createElement("li");
-      
-      // Tạo container cho từ và nghĩa
-      const contentDiv = document.createElement("div");
-      contentDiv.className = "word-content";
-      contentDiv.textContent = `${entry.word}: ${entry.meaning}`;
-      li.appendChild(contentDiv);
+    if (pageWords.length === 0) {
+      wordList.innerHTML = '<div class="empty-list-message" style="text-align:center; color:#64748b; padding: 32px 0; font-size: 16px;">No words have been added yet.</div>';
+    } else {
+      pageWords.forEach((entry, index) => {
+        const li = document.createElement("li");
+        
+        // Tạo container cho từ và nghĩa
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "word-content";
+        contentDiv.textContent = `${entry.word}: ${entry.meaning}`;
+        li.appendChild(contentDiv);
 
-      // Tạo container cho các nút
-      const buttonsDiv = document.createElement("div");
-      buttonsDiv.className = "word-buttons";
+        // Tạo container cho các nút
+        const buttonsDiv = document.createElement("div");
+        buttonsDiv.className = "word-buttons";
 
-      // Nút Google Translate
-      const translateBtn = document.createElement("span");
-      translateBtn.textContent = "Detail";
-      translateBtn.className = "translate-text";
-      translateBtn.title = "Translate on Google";
-      translateBtn.onclick = () => openGoogleTranslate(entry.word);
-      buttonsDiv.appendChild(translateBtn);
+        // Nút Google Translate
+        const translateBtn = document.createElement("span");
+        translateBtn.textContent = "Detail";
+        translateBtn.className = "translate-text";
+        translateBtn.title = "Translate on Google";
+        translateBtn.onclick = () => openGoogleTranslate(entry.word);
+        buttonsDiv.appendChild(translateBtn);
 
-      // Nút Delete
-      const delBtn = document.createElement("span");
-      delBtn.textContent = "Delete";
-      delBtn.className = "delete-text";
-      delBtn.onclick = () => deleteWord(start + index);
-      buttonsDiv.appendChild(delBtn);
+        // Nút Delete
+        const delBtn = document.createElement("span");
+        delBtn.textContent = "Delete";
+        delBtn.className = "delete-text";
+        delBtn.onclick = () => deleteWord(start + index);
+        buttonsDiv.appendChild(delBtn);
 
-      li.appendChild(buttonsDiv);
-      wordList.appendChild(li);
-    });
+        li.appendChild(buttonsDiv);
+        wordList.appendChild(li);
+      });
+    }
 
     // Update pagination controls
     pageInfo.textContent = `Page ${currentPage} of ${totalPages || 1}`;
@@ -310,9 +314,11 @@ function updateModeText() {
 function loadNewGameWord() {
   chrome.storage.local.get({ dictionary: [] }, (result) => {
     if (result.dictionary.length === 0) {
-      gameQuestion.textContent = "No words in dictionary!";
+      gameQuestion.textContent = "No words have been added yet.";
       gameAnswer.value = "";
       gameResult.textContent = "";
+      const optionsContainer = document.getElementById('gameOptions');
+      optionsContainer.innerHTML = '';
       return;
     }
 
