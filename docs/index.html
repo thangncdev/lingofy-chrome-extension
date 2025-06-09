@@ -18,10 +18,22 @@
       color: white;
       padding: 2rem 1rem;
       text-align: center;
+      position: relative;
     }
     header h1 {
       margin: 0;
       font-size: 2rem;
+    }
+    .lang-switch {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .lang-switch a {
+      color: white;
+      text-decoration: underline;
+      font-size: 0.9rem;
+      margin-left: 1rem;
     }
     main {
       padding: 2rem;
@@ -63,6 +75,9 @@
   <header>
     <h1>🦊 Lingofy Dictionary</h1>
     <p>Tiện ích học từ vựng tiếng Anh đơn giản, hiệu quả và cực kỳ tiện lợi!</p>
+    <div class="lang-switch">
+      <a href="index-en.html">English 🇬🇧</a>
+    </div>
   </header>
 
   <main>
@@ -107,7 +122,7 @@
   </main>
 
   <footer>
-    © 2025 Thang Nguyen. Made with ❤️ for English learners.
+    © 2025 Thang Nguyen. Made with ❤️ for English learners. | <a href="index-en.html">English</a>
   </footer>
 </body>
 </html>
