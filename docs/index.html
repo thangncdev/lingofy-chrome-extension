@@ -6,41 +6,29 @@
   <title>Lingofy Dictionary - User Guide</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --primary-dark: #4338ca;
-      --background: #f0f4ff;
-      --text-color: #222;
-      --section-bg: white;
-      --radius: 1rem;
-    }
-
     body {
       font-family: 'Inter', sans-serif;
       margin: 0;
-      background: var(--background);
-      color: var(--text-color);
+      background: #ffffff;
+      color: #222;
+      line-height: 1.6;
     }
 
     header {
-      background: var(--primary-color);
-      color: white;
-      padding: 3rem 1rem 2rem;
+      padding: 2rem 1rem 1rem;
       text-align: center;
-      position: relative;
-      border-bottom-left-radius: var(--radius);
-      border-bottom-right-radius: var(--radius);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-bottom: 1px solid #eee;
     }
 
     header h1 {
       margin: 0;
-      font-size: 2.75rem;
+      font-size: 2rem;
     }
 
     header p {
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
+      margin: 0.5rem 0 0;
+      font-size: 1rem;
+      color: #555;
     }
 
     .lang-switch {
@@ -50,38 +38,29 @@
     }
 
     .lang-switch button {
-      background: white;
-      color: var(--primary-color);
-      padding: 0.4rem 0.8rem;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
+      background: none;
+      color: #222;
+      border: 1px solid #ccc;
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
       cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      transition: background 0.2s;
-    }
-
-    .lang-switch button:hover {
-      background: #eef0ff;
     }
 
     main {
-      padding: 3rem 1.5rem;
-      max-width: 900px;
-      margin: 0 auto;
+      padding: 2rem 1rem;
+      max-width: 800px;
+      margin: auto;
     }
 
     section {
-      background: var(--section-bg);
-      padding: 2rem;
-      border-radius: var(--radius);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       margin-bottom: 2rem;
     }
 
     h2 {
-      color: var(--primary-color);
-      margin-top: 0;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #111;
     }
 
     ul, ol {
@@ -92,23 +71,23 @@
       text-align: center;
       padding: 2rem 1rem;
       font-size: 0.9rem;
-      color: #777;
+      color: #888;
+      border-top: 1px solid #eee;
     }
 
     .cta {
       display: inline-block;
       margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
-      background: var(--primary-color);
+      padding: 0.6rem 1.2rem;
+      background: #000;
       color: white;
-      border-radius: 8px;
+      border-radius: 6px;
       text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
+      font-weight: 500;
     }
 
     .cta:hover {
-      background: var(--primary-dark);
+      background: #333;
     }
 
     .hidden {
@@ -118,20 +97,85 @@
 </head>
 <body>
   <header>
-    <h1>🦊 Lingofy Dictionary</h1>
-    <p id="subheading">Simple, effective, and convenient English vocabulary learning tool!</p>
     <div class="lang-switch">
       <button onclick="toggleLanguage()" id="lang-toggle">🇻🇳 Tiếng Việt</button>
     </div>
+    <h1>🦊 Lingofy Dictionary</h1>
+    <p id="subheading">Simple, effective, and convenient English vocabulary learning tool</p>
   </header>
 
   <main>
-    <!-- Content remains unchanged -->
-    <!-- (Preserve original #vi and #en content) -->
+    <div id="vi" class="hidden">
+      <section>
+        <h2>📌 Giới thiệu</h2>
+        <p>Thế giới tiếng Anh có vô vàn từ vựng, và bạn dễ bị choáng ngợp khi không biết nên học từ nào trước. Lingofy giúp bạn giải quyết điều đó bằng cách tập trung vào chính những từ bạn gặp trong cuộc sống, học tập và công việc mỗi ngày.</p>
+        <p>Khi đang đọc tài liệu, làm việc hay lướt web, bạn chỉ cần bôi đen từ mới và nhấn chuột phải — Lingofy sẽ thêm ngay từ đó vào danh sách từ vựng cá nhân của bạn. Mọi từ được lưu tập trung tại một nơi, giúp bạn dễ dàng xem lại và luyện tập bất cứ lúc nào.</p>
+        <p>Trong thời gian nghỉ ngắn hoặc khi chờ đợi điều gì đó, bạn có thể mở tiện ích để xem lại các từ đã lưu. Đừng quên ghim Lingofy lên thanh công cụ để nó luôn sẵn sàng và nhắc nhở bạn ôn từ mỗi ngày.</p>
+      </section>
+      <section>
+        <h2>🚀 Cài đặt</h2>
+        <p>Bạn có thể cài đặt tiện ích Lingofy trực tiếp từ Chrome Web Store:</p>
+        <a class="cta" href="https://chromewebstore.google.com/detail/lingofy-dictionary/pkdjjmmokgfodmeinjdgijppjpbhfpni" target="_blank">Truy cập Chrome Web Store</a>
+      </section>
+      <section>
+        <h2>🛠️ Tính năng nổi bật</h2>
+        <ul>
+          <li>➕ Thêm từ mới bằng nút "Add New Word" hoặc click chuột phải khi bôi đen từ trên web.</li>
+          <li>📋 Danh sách lưu từ cho phép chỉnh sửa, xoá, tìm kiếm.</li>
+          <li>🎮 Trò chơi giúp luyện tập nhanh và nhớ lâu hơn.</li>
+          <li>📊 Tự động <strong>thống kê những từ bạn thường làm sai</strong> để nhắc nhở ôn luyện.</li>
+          <li>📤 Dễ dàng <strong>xuất</strong> toàn bộ dữ liệu từ vựng của bạn.</li>
+          <li>📥 Có thể <strong>nhập lại</strong> dữ liệu bất cứ khi nào bạn cần.</li>      
+        </ul>
+      </section>
+      <section>
+        <h2>🔒 Riêng tư tuyệt đối</h2>
+        <p>Không cần tài khoản. Dữ liệu từ vựng được lưu ngay trên trình duyệt của bạn (localStorage), an toàn và riêng tư.</p>
+      </section>
+      <section>
+        <h2>📮 Góp ý & Phát triển</h2>
+        <p>Lingofy vẫn đang phát triển, bạn có thể đóng góp ý tưởng hoặc báo lỗi tại:</p>
+        <a class="cta" href="https://github.com/thangncdev/lingofy-chrome-extension" target="_blank">GitHub Project</a>
+      </section>
+    </div>
+
+    <div id="en">
+      <section>
+        <h2>📌 Introduction</h2>
+        <p>English has countless words, and it's easy to get lost not knowing which ones to focus on. Lingofy helps you concentrate on the most relevant vocabulary — the words you come across during your everyday life, work, and study.</p>
+        <p>Whenever you encounter a new word while browsing or reading, simply highlight it and right-click — Lingofy will instantly save it to your personal word list. All your vocabulary is stored in one place, so you can review and practice it anytime.</p>
+        <p>During short breaks or idle moments, just open the extension to quickly refresh your memory. Don’t forget to pin Lingofy to your toolbar so it’s always within reach and reminds you to keep learning.</p>
+      </section>
+      <section>
+        <h2>🚀 Installation</h2>
+        <p>You can install Lingofy directly from the Chrome Web Store:</p>
+        <a class="cta" href="https://chromewebstore.google.com/detail/lingofy-dictionary/pkdjjmmokgfodmeinjdgijppjpbhfpni" target="_blank">Visit Chrome Web Store</a>
+      </section>
+      <section>
+        <h2>🛠️ Key Features</h2>
+        <ul>
+          <li>➕ Add words via "Add New Word" or right-click any word on the web.</li>
+          <li>📋 Manage your word list: edit, delete, search.</li>
+          <li>🎮 Practice with a fun, fast-paced word quiz game.</li>
+          <li>📤 Easily <strong>export</strong> all your saved vocabulary.</li>
+          <li>📥 <strong>Import</strong> your data anytime you want to restore it.</li>
+        </ul>
+      </section>
+      </section>
+      <section>
+        <h2>🔒 Privacy First</h2>
+        <p>No login needed. Your vocabulary is stored locally in your browser (localStorage) — fully private and secure.</p>
+      </section>
+      <section>
+        <h2>📮 Feedback & Contribution</h2>
+        <p>Lingofy is growing! Feel free to report issues or suggest ideas at:</p>
+        <a class="cta" href="https://github.com/thangncdev/lingofy-chrome-extension" target="_blank">GitHub Project</a>
+      </section>
+    </div>
   </main>
 
   <footer>
-    © 2025 Thang Nguyen. Made with ❤️ for English learners.
+    © 2025 Thang Nguyen. Built for English learners.
   </footer>
 
   <script>
@@ -145,13 +189,13 @@
         en.classList.remove('hidden');
         vi.classList.add('hidden');
         toggle.textContent = '🇻🇳 Tiếng Việt';
-        heading.textContent = 'Simple, effective, and convenient English vocabulary learning tool!';
+        heading.textContent = 'Simple, effective, and convenient English vocabulary learning tool';
         localStorage.setItem('lingofy_lang', 'en');
       } else {
         en.classList.add('hidden');
         vi.classList.remove('hidden');
         toggle.textContent = '🇬🇧 English';
-        heading.textContent = 'Tiện ích học từ vựng tiếng Anh đơn giản, hiệu quả và cực kỳ tiện lợi!';
+        heading.textContent = 'Tiện ích học từ vựng tiếng Anh đơn giản, hiệu quả và dễ dùng';
         localStorage.setItem('lingofy_lang', 'vi');
       }
     }
