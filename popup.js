@@ -32,6 +32,7 @@ const saveModalBtn = document.getElementById('saveModalBtn');
 const cancelModalBtn = document.getElementById('cancelModalBtn');
 const modalWord = document.getElementById('modalWord');
 const modalMeaning = document.getElementById('modalMeaning');
+const modalPartOfSpeech = document.getElementById('modalPartOfSpeech');
 
 // Pagination variables
 let currentPage = 1;
@@ -107,9 +108,10 @@ cancelModalBtn.onclick = closeAddModal;
 saveModalBtn.onclick = () => {
   const word = modalWord.value.trim();
   const meaning = modalMeaning.value.trim();
+  const partOfSpeech = modalPartOfSpeech.value;
   if (!word || !meaning) return alert('Please fill both fields.');
   chrome.storage.local.get({ dictionary: [] }, (result) => {
-    const updated = [...result.dictionary, { word, meaning }];
+    const updated = [...result.dictionary, { word, meaning, partOfSpeech }];
     chrome.storage.local.set({ dictionary: updated }, () => {
       closeAddModal();
       loadWords();
@@ -225,7 +227,11 @@ function loadWords(filter = "") {
         // Tạo container cho từ và nghĩa
         const contentDiv = document.createElement("div");
         contentDiv.className = "word-content";
-        contentDiv.textContent = `${entry.word}: ${entry.meaning}`;
+        let wordHtml = `<span>${entry.word}</span>`;
+        if (entry.partOfSpeech) {
+          wordHtml += ` <span class='pos-badge'>${entry.partOfSpeech}</span>`;
+        }
+        contentDiv.innerHTML = `${wordHtml}: ${entry.meaning}`;
         li.appendChild(contentDiv);
 
         // Tạo container cho các nút
