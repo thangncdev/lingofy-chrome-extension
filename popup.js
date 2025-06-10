@@ -33,6 +33,7 @@ const cancelModalBtn = document.getElementById('cancelModalBtn');
 const modalWord = document.getElementById('modalWord');
 const modalMeaning = document.getElementById('modalMeaning');
 const modalPartOfSpeech = document.getElementById('modalPartOfSpeech');
+const gameOptions = document.getElementById('gameOptions');
 
 // Pagination variables
 let currentPage = 1;
@@ -238,27 +239,68 @@ function loadWords(filter = "") {
         const buttonsDiv = document.createElement("div");
         buttonsDiv.className = "word-buttons";
 
+        // Nút Edit
+        const editBtn = document.createElement("span");
+        editBtn.innerHTML = '<span class="material-icons edit-icon">edit</span>';
+        editBtn.title = "Edit word";
+        editBtn.onclick = () => {
+          modalWord.value = entry.word;
+          modalMeaning.value = entry.meaning;
+          modalPartOfSpeech.value = entry.partOfSpeech || '';
+          addWordModal.style.display = 'flex';
+          setTimeout(() => modalMeaning.focus(), 100);
+
+          // Cập nhật hàm save để cập nhật từ thay vì thêm mới
+          const originalSaveBtn = saveModalBtn.onclick;
+          saveModalBtn.onclick = () => {
+            const word = modalWord.value.trim();
+            const meaning = modalMeaning.value.trim();
+            const partOfSpeech = modalPartOfSpeech.value;
+            if (!word || !meaning) return alert('Please fill both fields.');
+            
+            chrome.storage.local.get({ dictionary: [] }, (result) => {
+              const updated = result.dictionary.map(item => 
+                item.word === entry.word ? { word, meaning, partOfSpeech } : item
+              );
+              chrome.storage.local.set({ dictionary: updated }, () => {
+                closeAddModal();
+                loadWords();
+                // Khôi phục lại hàm save ban đầu
+                saveModalBtn.onclick = originalSaveBtn;
+              });
+            });
+          };
+        };
+        buttonsDiv.appendChild(editBtn);
+
         // Nút Google Translate
         const translateBtn = document.createElement("span");
-        translateBtn.textContent = "Detail";
-        translateBtn.className = "translate-text";
+        translateBtn.innerHTML = '<span class="material-icons translate-icon">translate</span>';
         translateBtn.title = "Translate on Google";
         translateBtn.onclick = () => openGoogleTranslate(entry.word);
         buttonsDiv.appendChild(translateBtn);
 
         // Nút Delete
         const delBtn = document.createElement("span");
-        delBtn.textContent = "Delete";
-        delBtn.className = "delete-text";
-        delBtn.onclick = () => deleteWord(start + index);
+        delBtn.innerHTML = '<span class="material-icons delete-icon">delete</span>';
+        delBtn.title = "Delete word";
+        delBtn.onclick = () => {
+          if (confirm('Are you sure you want to delete this word?')) {
+            chrome.storage.local.get({ dictionary: [] }, (result) => {
+              const updated = result.dictionary.filter(item => item.word !== entry.word);
+              chrome.storage.local.set({ dictionary: updated }, () => {
+                loadWords();
+              });
+            });
+          }
+        };
         buttonsDiv.appendChild(delBtn);
 
         li.appendChild(buttonsDiv);
         wordList.appendChild(li);
       });
     }
-
-    // Update pagination controls
+    
     pageInfo.textContent = `Page ${currentPage} of ${totalPages || 1}`;
     prevPageBtn.disabled = currentPage === 1;
     nextPageBtn.disabled = currentPage === totalPages;
@@ -319,42 +361,56 @@ function updateModeText() {
 
 function loadNewGameWord() {
   chrome.storage.local.get({ dictionary: [] }, (result) => {
-    if (result.dictionary.length === 0) {
-      gameQuestion.textContent = "No words have been added yet.";
-      gameAnswer.value = "";
-      gameResult.textContent = "";
-      const optionsContainer = document.getElementById('gameOptions');
-      optionsContainer.innerHTML = '';
+    const allWords = result.dictionary;
+    if (allWords.length === 0) {
+      gameQuestion.innerHTML = '<div class="empty-list-message" style="text-align:center; color:#64748b; padding: 32px 0; font-size: 16px;">No words have been added yet.</div>';
+      gameAnswer.style.display = 'none';
+      checkAnswerBtn.style.display = 'none';
+      skipWordBtn.style.display = 'none';
+      gameOptions.style.display = 'none';
       return;
     }
 
-    const randomIndex = Math.floor(Math.random() * result.dictionary.length);
-    currentGameWord = result.dictionary[randomIndex];
+    gameAnswer.style.display = 'block';
+    checkAnswerBtn.style.display = 'block';
+    skipWordBtn.style.display = 'block';
 
+    const randomIndex = Math.floor(Math.random() * allWords.length);
+    currentGameWord = allWords[randomIndex];
+
+    // Generate options
     const correctAnswer = isShowingWord ? currentGameWord.meaning : currentGameWord.word;
-    currentOptions = getRandomOptions(correctAnswer, result.dictionary);
+    currentOptions = getRandomOptions(correctAnswer, allWords);
 
-    gameQuestion.textContent = isShowingWord ? 
-      `What is the meaning of: ${currentGameWord.word}?` :
-      `What is the word for: ${currentGameWord.meaning}?`;
-    
-    gameAnswer.value = "";
-    gameResult.textContent = "";
+    if (isShowingWord) {
+      gameQuestion.innerHTML = `
+        <div class="game-word">${currentGameWord.word}</div>
+        ${currentGameWord.partOfSpeech ? `<div class="game-pos">${currentGameWord.partOfSpeech}</div>` : ''}
+      `;
+      gameAnswer.placeholder = "Enter the meaning...";
+    } else {
+      gameQuestion.innerHTML = `
+        <div class="game-meaning">${currentGameWord.meaning}</div>
+      `;
+      gameAnswer.placeholder = "Enter the word...";
+    }
 
-    // Update options
-    const optionsContainer = document.getElementById('gameOptions');
-    optionsContainer.innerHTML = '';
+    // Show options
+    gameOptions.innerHTML = '';
     currentOptions.forEach(option => {
       const optionBtn = document.createElement('button');
       optionBtn.className = 'option-btn';
       optionBtn.textContent = option.text;
-      optionBtn.style.color = "#000";
       optionBtn.onclick = () => {
         gameAnswer.value = option.text;
         checkAnswer();
       };
-      optionsContainer.appendChild(optionBtn);
+      gameOptions.appendChild(optionBtn);
     });
+
+    gameAnswer.value = "";
+    gameResult.innerHTML = "";
+    gameAnswer.focus();
   });
 }
 
@@ -387,8 +443,6 @@ function getWordMeaning(word, allWords) {
 }
 
 function checkAnswer() {
-  if (!currentGameWord) return;
-
   const userAnswer = gameAnswer.value.trim().toLowerCase();
   const correctAnswer = isShowingWord ? 
     currentGameWord.meaning.toLowerCase() : 
@@ -400,58 +454,80 @@ function checkAnswer() {
     btn.disabled = true;
     const optionText = btn.textContent.toLowerCase();
     const meaning = currentOptions[index].meaning;
-    
+
+    // Show meaning on a new line below the word
+    btn.innerHTML = `<div>${btn.textContent}</div><div class='option-meaning'>${meaning}</div>`;
+
     if (optionText === correctAnswer) {
-      // Đáp án đúng
       btn.classList.add('correct-option');
-      btn.innerHTML = `${btn.textContent} <span class="option-meaning">(${meaning})</span>`;
     } else if (optionText === userAnswer) {
-      // Đáp án người dùng chọn (nếu sai)
       btn.classList.add('wrong-option');
-      btn.innerHTML = `${btn.textContent} <span class="option-meaning">(${meaning})</span>`;
-      
-      // Tăng số lần sai cho từ này
-      chrome.storage.local.get({ wordErrors: {} }, (result) => {
-        const wordErrors = result.wordErrors || {};
-        const wordKey = isShowingWord ? currentGameWord.word : currentGameWord.meaning;
-        wordErrors[wordKey] = (wordErrors[wordKey] || 0) + 1;
-        chrome.storage.local.set({ wordErrors });
-      });
-    } else {
-      // Các option khác
-      btn.innerHTML = `${btn.textContent} <span class="option-meaning">(${meaning})</span>`;
     }
   });
 
   if (userAnswer === correctAnswer) {
-    gameResult.textContent = "Correct!";
-    gameResult.style.color = "#22c55e";
-    
-    // Increment correct answers count
+    gameResult.innerHTML = `
+      <div class="correct-answer">
+        <span class="material-icons" style="color: #10b981; vertical-align: middle;">check_circle</span>
+        Correct!
+      </div>
+      <div class="answer-details">
+        <div class="word-row">
+          <div class="word-label">Word:</div>
+          <div class="word-value">${currentGameWord.word}</div>
+        </div>
+        <div class="meaning-row">
+          <div class="meaning-label">Meaning:</div>
+          <div class="meaning-value">${currentGameWord.meaning}</div>
+        </div>
+        ${currentGameWord.partOfSpeech ? `
+          <div class="pos-row">
+            <div class="pos-label">Part of Speech:</div>
+            <div class="pos-value">${currentGameWord.partOfSpeech}</div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+    // Update achievements
     chrome.storage.local.get({ correctAnswers: 0 }, (result) => {
-      const newCount = (result.correctAnswers || 0) + 1;
-      chrome.storage.local.set({ correctAnswers: newCount }, () => {
-        // Update achievements if achievements tab is visible
-        if (achievementsSection.style.display !== 'none') {
-          updateAchievements();
-        }
+      const newTotal = result.correctAnswers + 1;
+      chrome.storage.local.set({ correctAnswers: newTotal }, () => {
+        updateAchievements();
       });
     });
   } else {
-    // Lấy số lần sai để hiển thị
+    gameResult.innerHTML = `
+      <div class="wrong-answer">
+        <span class="material-icons" style="color: #ef4444; vertical-align: middle;">cancel</span>
+        Incorrect!
+      </div>
+      <div class="answer-details">
+        <div class="word-row">
+          <div class="word-label">Word:</div>
+          <div class="word-value">${currentGameWord.word}</div>
+        </div>
+        <div class="meaning-row">
+          <div class="meaning-label">Meaning:</div>
+          <div class="meaning-value">${currentGameWord.meaning}</div>
+        </div>
+        ${currentGameWord.partOfSpeech ? `
+          <div class="pos-row">
+            <div class="pos-label">Part of Speech:</div>
+            <div class="pos-value">${currentGameWord.partOfSpeech}</div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+    // Lưu số lần sai vào wordErrors
     chrome.storage.local.get({ wordErrors: {} }, (result) => {
       const wordErrors = result.wordErrors || {};
       const wordKey = isShowingWord ? currentGameWord.word : currentGameWord.meaning;
-      const errorCount = wordErrors[wordKey] || 0;
-      gameResult.textContent = `Wrong! (Error count: ${errorCount})`;
-      gameResult.style.color = "#ef4444";
+      wordErrors[wordKey] = (wordErrors[wordKey] || 0) + 1;
+      chrome.storage.local.set({ wordErrors });
     });
   }
 
-  // Load new word after a short delay
-  setTimeout(() => {
-    loadNewGameWord();
-  }, 2000);
+  setTimeout(loadNewGameWord, 3000);
 }
 
 checkAnswerBtn.onclick = checkAnswer;
@@ -463,7 +539,7 @@ skipWordBtn.onclick = () => {
   gameResult.style.color = "#64748b";
   
   // Load new word after a short delay
-  setTimeout(loadNewGameWord, 2000);
+  setTimeout(loadNewGameWord, 3000);
 };
 
 // Thêm xử lý cho nút chuyển chế độ
@@ -569,7 +645,8 @@ function showErrorList() {
   chrome.storage.local.get({ wordErrors: {}, dictionary: [] }, (result) => {
     const wordErrors = result.wordErrors || {};
     const dictionary = result.dictionary || [];
-    
+    console.log(wordErrors, 'wordErrors');
+    console.log(dictionary, 'dictionary');
     // Tạo danh sách từ và số lần sai
     const errorList = Object.entries(wordErrors)
       .map(([word, count]) => {
@@ -583,7 +660,7 @@ function showErrorList() {
         };
       })
       .sort((a, b) => b.errorCount - a.errorCount);
-
+    console.log(errorList, 'errorList');
     // Hiển thị danh sách
     const errorListHtml = errorList.map(item => 
       `<div class="error-item">
@@ -598,18 +675,20 @@ function showErrorList() {
     modal.className = 'error-modal';
     modal.innerHTML = `
       <div class="error-modal-content">
-        <h3>Words with Most Errors</h3>
+        <div class="error-modal-header">
+          <h3>Words with Most Errors</h3>
+          <span class="material-icons edit-icon close-modal-error-list" title="Close">close</span>
+        </div>
         <div class="error-list">
           ${errorListHtml}
         </div>
-        <button class="close-modal">Close</button>
       </div>
     `;
 
     document.body.appendChild(modal);
 
     // Xử lý đóng modal
-    modal.querySelector('.close-modal').onclick = () => {
+    modal.querySelector('.close-modal-error-list').onclick = () => {
       modal.remove();
     };
   });

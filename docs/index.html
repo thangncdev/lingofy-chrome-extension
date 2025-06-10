@@ -1,98 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lingofy Dictionary - User Guide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      background: #ffffff;
-      color: #222;
-      line-height: 1.6;
-    }
-
-    header {
-      padding: 2rem 1rem 1rem;
-      text-align: center;
-      border-bottom: 1px solid #eee;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-
-    header p {
-      margin: 0.5rem 0 0;
-      font-size: 1rem;
-      color: #555;
-    }
-
-    .lang-switch {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-    }
-
+    body { font-family: 'Inter', sans-serif; margin: 0; background: #ffffff; color: #222; line-height: 1.6; }
+    header { padding: 2rem 1rem 1rem; text-align: center; border-bottom: 1px solid #eee; }
+    header h1 { margin: 0; font-size: 2rem; }
+    header p { margin: 0.5rem 0 0; font-size: 1rem; color: #555; }
+    .lang-switch { position: absolute; top: 1rem; right: 1rem; }
     .lang-switch button {
-      background: none;
-      color: #222;
-      border: 1px solid #ccc;
-      padding: 0.3rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      cursor: pointer;
+      background: none; color: #222; border: 1px solid #ccc;
+      padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.9rem; cursor: pointer;
     }
-
-    main {
-      padding: 2rem 1rem;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    section {
-      margin-bottom: 2rem;
-    }
-
-    h2 {
-      font-size: 1.3rem;
-      margin-bottom: 0.5rem;
-      color: #111;
-    }
-
-    ul, ol {
-      padding-left: 1.5rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem 1rem;
-      font-size: 0.9rem;
-      color: #888;
-      border-top: 1px solid #eee;
-    }
-
+    main { padding: 2rem 1rem; max-width: 800px; margin: auto; }
+    section { margin-bottom: 2rem; }
+    h2 { font-size: 1.3rem; margin-bottom: 0.5rem; color: #111; }
+    ul, ol { padding-left: 1.5rem; }
+    footer { text-align: center; padding: 2rem 1rem; font-size: 0.9rem; color: #888; border-top: 1px solid #eee; }
     .cta {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
-      background: #000;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 500;
+      display: inline-block; margin-top: 1rem; padding: 0.6rem 1.2rem;
+      background: #000; color: white; border-radius: 6px; text-decoration: none; font-weight: 500;
     }
-
-    .cta:hover {
-      background: #333;
-    }
-
-    .hidden {
-      display: none;
-    }
+    .cta:hover { background: #333; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -103,13 +36,12 @@
     <h1>🦊 Lingofy Dictionary</h1>
     <p id="subheading">Simple, effective, and convenient English vocabulary learning tool</p>
   </header>
-
   <main>
     <div id="vi" class="hidden">
       <section>
         <h2>📌 Giới thiệu</h2>
         <p>Thế giới tiếng Anh có vô vàn từ vựng, và bạn dễ bị choáng ngợp khi không biết nên học từ nào trước. Lingofy giúp bạn giải quyết điều đó bằng cách tập trung vào chính những từ bạn gặp trong cuộc sống, học tập và công việc mỗi ngày.</p>
-        <p>Khi đang đọc tài liệu, làm việc hay lướt web, bạn chỉ cần bôi đen từ mới và nhấn chuột phải — Lingofy sẽ thêm ngay từ đó vào danh sách từ vựng cá nhân của bạn. Mọi từ được lưu tập trung tại một nơi, giúp bạn dễ dàng xem lại và luyện tập bất cứ lúc nào.</p>
+        <p>Khi đang đọc tài liệu, làm việc hay lướt web, bạn chỉ cần bôi đen từ mới và nhấn chuột phải — Lingofy sẽ thêm ngay từ đó vào danh sách từ vựng cá nhân của bạn.</p>
         <p>Trong thời gian nghỉ ngắn hoặc khi chờ đợi điều gì đó, bạn có thể mở tiện ích để xem lại các từ đã lưu. Đừng quên ghim Lingofy lên thanh công cụ để nó luôn sẵn sàng và nhắc nhở bạn ôn từ mỗi ngày.</p>
       </section>
       <section>
@@ -125,26 +57,20 @@
           <li>🎮 Trò chơi giúp luyện tập nhanh và nhớ lâu hơn.</li>
           <li>📊 Tự động <strong>thống kê những từ bạn thường làm sai</strong> để nhắc nhở ôn luyện.</li>
           <li>📤 Dễ dàng <strong>xuất</strong> toàn bộ dữ liệu từ vựng của bạn.</li>
-          <li>📥 Có thể <strong>nhập lại</strong> dữ liệu bất cứ khi nào bạn cần.</li>      
+          <li>📥 Có thể <strong>nhập lại</strong> dữ liệu bất cứ khi nào bạn cần.</li>
+          <li>📚 Nếu bạn chưa có từ nào, hãy để tôi giúp bạn với danh sách từ vựng TOEIC. 
+            <button onclick="downloadVocabulary()" style="font-weight:600; text-decoration:underline; background:none; border:none; color:#007bff; cursor:pointer;">Tải file vocabulary.json</button> và "Import" vào tiện ích.</li>
         </ul>
       </section>
-      <section>
-        <h2>🔒 Riêng tư tuyệt đối</h2>
-        <p>Không cần tài khoản. Dữ liệu từ vựng được lưu ngay trên trình duyệt của bạn (localStorage), an toàn và riêng tư.</p>
-      </section>
-      <section>
-        <h2>📮 Góp ý & Phát triển</h2>
-        <p>Lingofy vẫn đang phát triển, bạn có thể đóng góp ý tưởng hoặc báo lỗi tại:</p>
-        <a class="cta" href="https://github.com/thangncdev/lingofy-chrome-extension" target="_blank">GitHub Project</a>
-      </section>
+      <section><h2>🔒 Riêng tư tuyệt đối</h2><p>Không cần tài khoản. Dữ liệu từ vựng được lưu ngay trên trình duyệt của bạn (localStorage), an toàn và riêng tư.</p></section>
+      <section><h2>📮 Góp ý & Phát triển</h2><p>Lingofy vẫn đang phát triển, bạn có thể đóng góp ý tưởng hoặc báo lỗi tại:</p><a class="cta" href="https://github.com/thangncdev/lingofy-chrome-extension" target="_blank">GitHub Project</a></section>
     </div>
-
     <div id="en">
       <section>
         <h2>📌 Introduction</h2>
-        <p>English has countless words, and it's easy to get lost not knowing which ones to focus on. Lingofy helps you concentrate on the most relevant vocabulary — the words you come across during your everyday life, work, and study.</p>
-        <p>Whenever you encounter a new word while browsing or reading, simply highlight it and right-click — Lingofy will instantly save it to your personal word list. All your vocabulary is stored in one place, so you can review and practice it anytime.</p>
-        <p>During short breaks or idle moments, just open the extension to quickly refresh your memory. Don’t forget to pin Lingofy to your toolbar so it’s always within reach and reminds you to keep learning.</p>
+        <p>English has countless words... Lingofy helps you concentrate on the most relevant vocabulary — the words you come across during your everyday life, work, and study.</p>
+        <p>Whenever you encounter a new word... Lingofy will instantly save it to your personal word list.</p>
+        <p>During short breaks or idle moments, just open the extension to quickly refresh your memory.</p>
       </section>
       <section>
         <h2>🚀 Installation</h2>
@@ -159,24 +85,15 @@
           <li>🎮 Practice with a fun, fast-paced word quiz game.</li>
           <li>📤 Easily <strong>export</strong> all your saved vocabulary.</li>
           <li>📥 <strong>Import</strong> your data anytime you want to restore it.</li>
+          <li>📚 Don't have any words yet? No worries — I've compiled a list of TOEIC vocabulary for you. 
+            <button onclick="downloadVocabulary()" style="font-weight:600; text-decoration:underline; background:none; border:none; color:#007bff; cursor:pointer;">Download vocabulary.json</button> and import it into the extension.</li>
         </ul>
       </section>
-      </section>
-      <section>
-        <h2>🔒 Privacy First</h2>
-        <p>No login needed. Your vocabulary is stored locally in your browser (localStorage) — fully private and secure.</p>
-      </section>
-      <section>
-        <h2>📮 Feedback & Contribution</h2>
-        <p>Lingofy is growing! Feel free to report issues or suggest ideas at:</p>
-        <a class="cta" href="https://github.com/thangncdev/lingofy-chrome-extension" target="_blank">GitHub Project</a>
-      </section>
+      <section><h2>🔒 Privacy First</h2><p>No login needed. Your vocabulary is stored locally in your browser (localStorage) — fully private and secure.</p></section>
+      <section><h2>📮 Feedback & Contribution</h2><p>Lingofy is growing! Feel free to report issues or suggest ideas at:</p><a class="cta" href="https://github.com/thangncdev/lingofy-chrome-extension" target="_blank">GitHub Project</a></section>
     </div>
   </main>
-
-  <footer>
-    © 2025 Thang Nguyen. Built for English learners.
-  </footer>
+  <footer>© 2025 Thang Nguyen. Built for English learners.</footer>
 
   <script>
     function toggleLanguage() {
@@ -184,27 +101,137 @@
       const vi = document.getElementById('vi');
       const toggle = document.getElementById('lang-toggle');
       const heading = document.getElementById('subheading');
-
       if (en.classList.contains('hidden')) {
-        en.classList.remove('hidden');
-        vi.classList.add('hidden');
+        en.classList.remove('hidden'); vi.classList.add('hidden');
         toggle.textContent = '🇻🇳 Tiếng Việt';
         heading.textContent = 'Simple, effective, and convenient English vocabulary learning tool';
         localStorage.setItem('lingofy_lang', 'en');
       } else {
-        en.classList.add('hidden');
-        vi.classList.remove('hidden');
+        en.classList.add('hidden'); vi.classList.remove('hidden');
         toggle.textContent = '🇬🇧 English';
         heading.textContent = 'Tiện ích học từ vựng tiếng Anh đơn giản, hiệu quả và dễ dùng';
         localStorage.setItem('lingofy_lang', 'vi');
       }
     }
-
     window.onload = () => {
       const lang = localStorage.getItem('lingofy_lang') || navigator.language;
       const toggle = document.getElementById('lang-toggle');
       if (lang.startsWith('vi')) toggle.click();
     };
+
+    function downloadVocabulary() {
+      const data = {
+        "dictionary": [
+          {
+            "word": "accomplish",
+            "meaning": "hoàn thành, đạt được",
+            "partOfSpeech": "verb"
+          },
+          {
+            "word": "accurate",
+            "meaning": "chính xác, đúng đắn",
+            "partOfSpeech": "adjective"
+          },
+          {
+            "word": "adequate",
+            "meaning": "đầy đủ, thỏa đáng",
+            "partOfSpeech": "adjective"
+          },
+          {
+            "word": "adjust",
+            "meaning": "điều chỉnh, thích nghi",
+            "partOfSpeech": "verb"
+          },
+          {
+            "word": "administration",
+            "meaning": "quản lý, hành chính",
+            "partOfSpeech": "noun"
+          },
+          {
+            "word": "advantage",
+            "meaning": "lợi thế, ưu điểm",
+            "partOfSpeech": "noun"
+          },
+          {
+            "word": "advertise",
+            "meaning": "quảng cáo",
+            "partOfSpeech": "verb"
+          },
+          {
+            "word": "advice",
+            "meaning": "lời khuyên",
+            "partOfSpeech": "noun"
+          },
+          {
+            "word": "affect",
+            "meaning": "ảnh hưởng",
+            "partOfSpeech": "verb"
+          },
+          {
+            "word": "agenda",
+            "meaning": "chương trình nghị sự",
+            "partOfSpeech": "noun"
+          },
+          {
+            "word": "agreement",
+            "meaning": "thỏa thuận, hợp đồng",
+            "partOfSpeech": "noun"
+          },
+          {
+            "word": "allocate",
+            "meaning": "phân bổ, cấp phát",
+            "partOfSpeech": "verb"
+          },
+          {
+            "word": "allowance",
+            "meaning": "phụ cấp, trợ cấp",
+            "partOfSpeech": "noun"
+          },
+          {
+            "word": "alternative",
+            "meaning": "phương án thay thế",
+            "partOfSpeech": "noun"
+          },
+          {
+            "word": "ambitious",
+            "meaning": "tham vọng, nhiệt huyết",
+            "partOfSpeech": "adjective"
+          },
+          {
+            "word": "analyze",
+            "meaning": "phân tích",
+            "partOfSpeech": "verb"
+          },
+          {
+            "word": "announce",
+            "meaning": "thông báo, công bố",
+            "partOfSpeech": "verb"
+          },
+          {
+            "word": "annual",
+            "meaning": "hàng năm, thường niên",
+            "partOfSpeech": "adjective"
+          },
+          {
+            "word": "anticipate",
+            "meaning": "dự đoán, mong đợi",
+            "partOfSpeech": "verb"
+          },
+          {
+            "word": "anxiety",
+            "meaning": "lo lắng, bất an",
+            "partOfSpeech": "noun"
+          }
+        ]
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vocabulary.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   </script>
 </body>
 </html>
