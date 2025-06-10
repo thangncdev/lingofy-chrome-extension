@@ -120,8 +120,7 @@
     };
 
     function downloadVocabulary() {
-      const data = {
-        "dictionary": [
+      const data = [
           {
             "word": "accomplish",
             "meaning": "hoàn thành, đạt được",
@@ -223,7 +222,6 @@
             "partOfSpeech": "noun"
           }
         ]
-      };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
