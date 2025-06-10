@@ -589,6 +589,7 @@ importFile.onchange = (event) => {
         chrome.storage.local.set({ dictionary: updatedDict }, () => {
           alert(`Import successful! ${data.length} words added.`);
           loadWords();
+          loadNewGameWord();
         });
       });
     } catch (error) {
